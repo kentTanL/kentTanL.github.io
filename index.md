@@ -2,6 +2,38 @@
 layout: default
 ---
 
+
+  {% for post in site.posts %}
+## [](#header-2) <a href="{{ post.url }}"> {{ post.title }}</a>
+      {{ post.excerpt }}
+  {% endfor %}
+
+<!-- 分页链接 -->
+<div class="pagination">
+  {% if paginator.previous_page %}
+    <a href="/page{{ paginator.previous_page }}" class="previous">Previous</a>
+  {% else %}
+    <span class="previous">Previous</span>
+  {% endif %}
+  <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+  {% if paginator.next_page %}
+    <a href="/page{{ paginator.next_page }}" class="next">Next</a>
+  {% else %}
+    <span class="next ">Next</span>
+  {% endif %}
+</div>
+
+{{site}} <br>
+per_page: {{ paginator.per_page }}{{ per_page }} <br>
+posts: {{ paginator.posts }} <br>
+total_posts: {{ paginator.total_posts }} <br>
+total_pages: {{ paginator.total_pages }} <br>
+page: {{ paginator.page }} <br>
+previous_page: {{ paginator.previous_page }} <br>
+previous_page_path: {{ paginator.previous_page_path }} <br>
+next_page: {{ paginator.next_page }} <br>
+next_page_path: {{ paginator.next_page_path }} <br>
+
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
 [Link to another page](another-page).
