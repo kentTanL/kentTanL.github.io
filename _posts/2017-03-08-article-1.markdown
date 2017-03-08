@@ -1,0 +1,236 @@
+---
+layout:     post
+title:      "[shell脚本]Linux自定义命令并启用应用"
+subtitle:   "[shell脚本]Linux自定义命令并启用应用"
+date:       2017-02-27 00:00:00
+author:     "Kent"
+header-img: "img/post-bg-2016.jpg"
+catalog: true
+tags:
+    - Linux, Shell
+---
+
+### **前言**
+
+之前做过一个Java Web系统，由很多的子系统组成，由尽管其子系统颇多，但是要在服务器上管理这些子系统（启动、停止、重启等）却很方便，只需要输入`tt` 便能看见每个应用的名称、状态等，然后输入对应的应用名+操作代码，便能进行对应的操作，这一切都源于它使用了自定义的命令，来调用对应的shell脚本或命令。正好目前我做的一个系统，还处于起步阶段，每次部署都太麻烦，所以就做了一个类似的功能。
+
+实现这个功能主要有两步：
+
+ 1. 创建相关操作的shell脚本；
+ 2. 自定义命令
+
+#### **1. 创建Shell脚本**
+
+```
+#!/bin/bash
+export APP_PATH=/usr/local/SmartDataStack
+operate=${1}
+#echo "${0}"
+APP_NAME="sds"
+
+pid=$(ps -aef | grep sds- | grep -v grep | awk '{print $2}')
+
+startSDS(){
+
+        if [ "$pid" == ""  ]; then
+                echo -n "$APP_NAME starting: "
+		
+		for f in $APP_PATH/sds*.jar; do
+  			sudo chown root:root $f && sudo chmod 775 $f
+		done
+		
+		if [ "$?" == 0 ]; then 
+			sudo sh $APP_PATH/start.prod.sh                      
+			
+			if [ "$?" -eq 0 ]; then
+				
+				echo "launch done, next will copy upload directory to $APP_PATH/tmp/webapp"
+				sleep 10
+				sudo cp -R $APP_PATH/upload $APP_PATH/tmp/webapp
+				echo -e ""
+				echo "Success"
+			else
+				echo "failure"
+			fi
+
+		else
+			echo "failure, 'chown' && 'chmod failure'"
+			echo -e ""
+			exit 1
+		fi
+		
+	else 
+		echo "can't start SDS: SDS is running."
+		echo -e ""
+		exit 1       
+        fi
+}
+
+stopSDS() {
+	
+	if [ "$pid" == "" ]; then
+		echo "can't stop SDS: SDS is not running."
+		echo -e ""
+		exit 1
+	fi
+
+	echo -n "$APP_NAME stoping[pid: $pid]: "	
+
+	# first copy upload dir
+	sudo cp -R $APP_PATH/tmp/webapp $APP_PATH/upload && sudo kill $pid	
+
+	# sudo kill `ps -aef | grep sds- | grep -v grep | awk '{print $2}'`
+	
+	if [ "$?" == 0 ]; then	
+		sleep 5
+		echo "success"
+	else
+		echo "failure"
+		echo  -e ""
+		exit 1
+	fi
+}
+
+restartSDS() {
+        
+	echo "$APP_NAME restart..."
+	# stopSDS
+        # startSDS
+	$0 stop
+	$0 start
+}
+
+statusSDS() {
+	
+	#echo "------------------------------------------"
+	echo "		pid	status	"
+	echo "------------------------------"	
+
+	if [ "$pid" == "" ]; then
+		echo "$APP_NAME	$pid	stoped"
+	else
+		echo "$APP_NAME	$pid	started"
+	fi
+	
+	
+}
+
+echo -e ""
+
+case "$operate" in
+	start)
+		startSDS
+		;;
+	stop)
+		stopSDS
+		;;
+	reload|restart)
+		restartSDS
+		;;
+	status)
+		statusSDS
+		;;
+	*)
+		echo -e "Usage params: start|stop|status|restart|reload"
+		;;
+esac		
+
+echo -e ""
+
+exit 0
+
+```
+
+#### **2. 配置别名（alias）**
+
+别名的配置可以分为两种，一种是只对自己生效，一种是对所有用户生效。
+
+**1.) 配置只对自己生效的别名**
+
+(1) 编辑~/.bashrc文件
+```
+sudo vim ~/.bashrc 
+```
+
+(2) 加入内容
+
+```
+alias sds="/usr/local/sh/sds.sh"
+```
+
+(3) 使配置生效
+```
+source ~/.bashrc
+```
+
+这时候使用sds即可查看效果，如下：
+
+```
+$ sds
+
+Usage params: start|stop|status|restart|reload
+
+$ sds status
+
+                pid     status
+------------------------------
+sds				24019   started
+
+```
+
+如果显示没有此命令的话，查看是否有~/.bash_profile 文件，这个文件会加载~/.bashrc 文件，源码如下：
+
+```
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:/root/bin:/sbin:/usr/sbin:/usr/script
+
+export PATH
+```
+
+**2.) 设置全局别名，对所有用户生效**
+
+上面的配置只能对当前用户有效，如果需要让所有的用户都能使用此别名，则需要使用下面的方法。
+
+(1) 在/etc/profile.d 目录下新建文件（文件名自定义），例：
+
+```
+sudo vim /etc/profile.d/custom-aliases.sh
+```
+
+(2) 输入别名配置，例：
+
+```
+alias sds="/usr/local/sh/sds.sh"
+```
+
+(3) 保存文件
+
+(4) 重新打开任何的terminals都可以使用这个别名了
+
+
+```
+$ sds
+
+Usage params: start|stop|status|restart|reload
+
+$ sds status
+
+                pid     status
+------------------------------
+sds				24019   started
+
+```
+
+Enjoy!
+
+参考资料
+
+http://askubuntu.com/questions/610052/how-can-i-preset-aliases-for-all-users
