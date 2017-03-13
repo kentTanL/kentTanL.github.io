@@ -1,0 +1,217 @@
+---
+layout:     post
+title:      "Spring JdbcTemplate Querying examples"
+subtitle:   "Spring JdbcTemplate Querying examples"
+date:       2017-03-17 18:54:00
+author:     "Kent"
+header-img: "img/post-bg-2016.jpg"
+catalog: true
+tags:
+    - Spring, JdbcTemplate
+---
+
+
+这里有一些示例向你展示如何使用JdbcTemplate的`query()`方法从数据库中查询或提取数据。
+
+### 1. 查询单行
+有两种可以从数据库中查询或提取一行数据，并将它们转换成一个model对象。
+
+#### 1.1 自定义RowMapper 
+通常，总是建议通过实现`RowMapper`接口来创建一个自定义的`RowMapper`类来满足你的需求，如下：
+
+```java
+package com.mkyong.customer.model;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.jdbc.core.RowMapper;
+
+public class CustomerRowMapper implements RowMapper
+{
+	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+		Customer customer = new Customer();
+		customer.setCustId(rs.getInt("CUST_ID"));
+		customer.setName(rs.getString("NAME"));
+		customer.setAge(rs.getInt("AGE"));
+		return customer;
+	}
+
+}
+```
+
+通过`queryForObject()`方法，返回的结果将调用你自定义得`mapRow(...)`方法以匹配正确的值，查询代码如下：
+
+```java
+public Customer findByCustomerId(int custId){
+
+	String sql = "SELECT * FROM CUSTOMER WHERE CUST_ID = ?";
+
+	Customer customer = (Customer)getJdbcTemplate().queryForObject(
+			sql, new Object[] { custId }, new CustomerRowMapper());
+
+	return customer;
+}
+```
+
+#### 1.2 BeanPropertyRowMapper
+在Spring 2.5中，有一个很方便的`RowMapper`接口的实现`BeanPropertyRowMapper`，它可以连续的将row value映射成一个property，只要它们具有相同的名称就行。比如：属性‘custId’将匹配列名‘CUSTID’或带下划线的‘CUST_ID’，查询代码如下：
+
+```java
+public Customer findByCustomerId2(int custId){
+
+	String sql = "SELECT * FROM CUSTOMER WHERE CUST_ID = ?";
+
+	Customer customer = (Customer)getJdbcTemplate().queryForObject(
+			sql, new Object[] { custId },
+			new BeanPropertyRowMapper(Customer.class));
+
+	return customer;
+}
+```
+
+### 2. 查询多行
+现在，来看如何从数据库中查询或提取多行数据并转换到List容器中。
+
+#### 2.1 手动映射
+在多行返回中，`RowMapper`不支持`queryForList()`方法，你需要手动的映射结果，如下：
+
+```java
+public List<Customer> findAll(){
+
+	String sql = "SELECT * FROM CUSTOMER";
+
+	List<Customer> customers = new ArrayList<Customer>();
+
+	List<Map> rows = getJdbcTemplate().queryForList(sql);
+	for (Map row : rows) {
+		Customer customer = new Customer();
+		customer.setCustId((Long)(row.get("CUST_ID")));
+		customer.setName((String)row.get("NAME"));
+		customer.setAge((Integer)row.get("AGE"));
+		customers.add(customer);
+	}
+
+	return customers;
+}
+```
+
+#### 2.2  BeanPropertyRowMapper
+当然最简单的办法就是使用```BeanPropertyRowMapper```类。
+
+```java
+public List<Customer> findAll(){
+
+	String sql = "SELECT * FROM CUSTOMER";
+
+	List<Customer> customers  = getJdbcTemplate().query(sql,
+			new BeanPropertyRowMapper(Customer.class));
+
+	return customers;
+}
+```
+
+#### 2.3 使用自定义的RowMapper
+当列名称与属性名称不一致时，也可以使用自定义的`RowMapper`类来替代`BeanPropertyRowMapper`。
+```java
+public List<Customer> findAll(){
+
+	String sql = "SELECT * FROM CUSTOMER";
+
+	List<Customer> customers  = getJdbcTemplate().query(sql,
+			new CustomerRowMapper());
+
+	return customers;
+}
+```
+
+### 3. 查询单个值
+在这个示例中，展示了如何从数据库中查询或提取一个单个列值。
+
+#### 3.1 单个列名称
+它显示了如何查询`String`类型的名称为`name`列的单个值，如下：
+
+```java
+public String findCustomerNameById(int custId){
+
+	String sql = "SELECT NAME FROM CUSTOMER WHERE CUST_ID = ?";
+
+	String name = (String)getJdbcTemplate().queryForObject(
+			sql, new Object[] { custId }, String.class);
+
+	return name;
+
+}
+```
+
+#### 3.2 总行数
+以下显示了如果从数据库中查询总行数：
+
+```java
+public int findTotalCustomer(){
+
+	String sql = "SELECT COUNT(*) FROM CUSTOMER";
+
+	int total = getJdbcTemplate().queryForInt(sql);
+
+	return total;
+}
+```
+Run it
+
+```java
+package com.mkyong.common;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.mkyong.customer.dao.CustomerDAO;
+import com.mkyong.customer.model.Customer;
+
+public class JdbcTemplateApp
+{
+    public static void main( String[] args )
+    {
+    	 ApplicationContext context =
+    		new ClassPathXmlApplicationContext("Spring-Customer.xml");
+
+         CustomerDAO customerDAO = (CustomerDAO) context.getBean("customerDAO");
+
+         Customer customerA = customerDAO.findByCustomerId(1);
+         System.out.println("Customer A : " + customerA);
+
+         Customer customerB = customerDAO.findByCustomerId2(1);
+         System.out.println("Customer B : " + customerB);
+
+         List<Customer> customerAs = customerDAO.findAll();
+         for(Customer cust: customerAs){
+         	 System.out.println("Customer As : " + customerAs);
+         }
+
+         List<Customer> customerBs = customerDAO.findAll2();
+         for(Customer cust: customerBs){
+         	 System.out.println("Customer Bs : " + customerBs);
+         }
+
+         String customerName = customerDAO.findCustomerNameById(1);
+         System.out.println("Customer Name : " + customerName);
+
+         int total = customerDAO.findTotalCustomer();
+         System.out.println("Total : " + total);
+
+    }
+}
+```
+
+#### 总结
+`JdbcTemplate `类中有许多有用的重载的查询方法，在你创建自定义的查询方法之前，建议先参考现有的查询方法，因为Spring可能意见维尼准备好了。
+
+### 下载源码
+
+Download it – [Spring-JdbcTemplate-Querying-Example.zip](http://www.mkyong.com/wp-content/uploads/2010/03/Spring-JDBC-Example.zip) (15 KB)
+
+英文原文链接：[http://www.mkyong.com/spring/spring-jdbctemplate-querying-examples/](http://www.mkyong.com/spring/spring-jdbctemplate-querying-examples/)，略有增加。
+
+CSDN同步地址：[http://blog.csdn.net/t894690230/article/details/60882891](http://blog.csdn.net/t894690230/article/details/60882891)
