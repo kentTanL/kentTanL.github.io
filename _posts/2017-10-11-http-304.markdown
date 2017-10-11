@@ -1,0 +1,100 @@
+---
+layout:     post
+title:      "在需要实时更新数据的接口中使用 304 状态码"
+subtitle:   "在需要实时更新数据的接口中使用 304 状态码"
+date:       2017-10-11 19:52:00
+author:     "Kent"
+header-img: "img/post-bg-2016.jpg"
+catalog: true
+tags:
+    - http 304
+---
+
+[TOC]
+
+## 一、前言
+
+Http 状态码是接口设计中不可或缺的一部分，它简洁却蕴含着丰富的含义，这里就简单介绍一下 304 状态码的使用示例吧。
+
+## 二、场景
+
+比如最近的一个需求是：在 Web 页面中查看任务详情时，要求能够不刷新页面便自动的更新它的状态与日志等信息（任务的执行会花费一定的时间，同时后台在处理任务的过程中会同步它的状态与日志的更新）。
+
+## 三、分析与方案
+
+使用`Ajax`不定时的获取数据是肯定的（不采用WebSocket方式），问题在于如何获取与传输数据。
+
+因为任务的状态更新可接受短暂的延时，所以不必采用长连接的方式，客户端只需要定时往服务器发送获取数据的请求即可，但是任务的数据量较大，如果任务并未发生改变，就查询它全部的相关信息并返回到客户端对性能而言必然不是最优的选择，所以我们需要在它发生改变后才查询并返回数据，那么这里就可以引入 304 状态码来解决任务无变化时的返回结果。
+
+> **304** Not Modified，只读/无变化 
+
+由于任务在更新状态或日志时，都会同时更新最后修改时间字段（modified），所以只需要客户端在请求时传入上一次的最后更新时间，服务端以此作为比较，便可知数据是否有发生改变，Api 请求示例如下：
+
+```html
+/api/task/{id}/details?modified=1507716647
+```
+
+**服务端：**  
+1) 如果判断数据发生变化，则获取最新的数据并返回  
+2) 如果判断数据未发生改变，则返回空的数据，并返回`304`状态码
+
+**客户端：**  
+1) 客户端收到返回的结果后，只需要根据状态码便可作出对应的操作
+
+以上的请求是使用短连接轮询的方式，然而在实际中即使使用长连接也可使用此种方式。
+
+## 四、附录
+
+Http 状态码的作用远不止于，根据业务的实际情况可灵活的选择使用，当然每一个状态码的使用都应该尽量满足它的本意，下面就贴一下常用状态码的大概含义吧：
+
+**1xx 消息**  
+100：继续 Contine  
+101：转换协议 Switching Protocols
+
+**2xx 成功**  
+200：OK  
+201：创建 Created  
+202：接受 Accepted  
+203：非权威信息 Non-Authoritative Information  
+204：无内容 No Content  
+205：重置内容 Reset Content  
+206：局部内容 Partial Content  
+
+**3xx 重定向**  
+300：多样选择 Multiple Choices  
+301：永久移动 Moved Permanently  
+302：创建 Move temporarily  
+303：观察别的部分 See Other  
+304：只读/无变化 Not Modified  
+305：用户代理 Use Proxy  
+307：临时重发 Temporary Redirect  
+
+**4xx 请求错误**  
+400：坏请求 Bad Request  
+401：未授权的 Unauthorized  
+402：必要的文件 Payment Required  
+403：禁用 Forbidden  
+404：没找到 Not Found  
+405：不允许的方式 Method Not Allowed  
+406：不接受 Not Acceptable  
+407：需要代理验证 Proxy Authentication Required  
+408：请求超时 Request Timeout  
+409：冲突 Conflict  
+410：停止 Gone  
+411：需要的长度 Length Required  
+412：预处理失败 Precondition Failed  
+413：请求实体太长 Request Entity Too Large  
+414：请求URI太长 Request-URL Too Long  
+415：不支持的媒体类型 Unsupported Media Type  
+416：请求的范围不满足 Requested Range Not Satisfiable  
+417：期望失败 Expectation Failed  
+
+**5xx 服务器错误**  
+500：服务器内部错误 Internal Server Error  
+501：不能实现 Not Implemented  
+502：坏网关 Bad Gateway  
+503：服务不能实现 Service Unavailable  
+504：网关超时 Gateway Timeout  
+505：HTTP版本不支持 HTTP Version Not Supported  
+
+更多详细内容可参见`RFC 2616`文档
