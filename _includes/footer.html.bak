@@ -3,7 +3,7 @@
         {% if site.github.is_project_page %}
           <span class="site-footer-owner"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</span>
         {% endif %}
-        <span class="site-footer-credits">This page was maintained by <a href="https://github.com/kentTanL">Kent.L.Tan</a>.</span>
+        <span class="site-footer-credits">This page was builded by <a href="https://github.com/kentTanL">Kent.L.Tan</a>.</span>
 </footer>
 
 <!-- jQuery -->
