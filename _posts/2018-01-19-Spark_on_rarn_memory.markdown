@@ -1,8 +1,7 @@
 ---
 layout:     post
 title:      "Spark _on_Yarn 资源池内存限制测试报告 - 防止“非法”任务的提交"
-subtitle:   "防止用户使用 root 账户提交任务"
-date:       2017-01-19 19:25:00
+date:       2018-01-19 19:25:00
 author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
 catalog: true
