@@ -22,7 +22,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 
 # Analytics settings
 # Baidu Analytics
-ba_track_id: eb9220ff4832151b0268a98f99d2901a
+ba_track_id: 8eb5262d38c50c342a631d2c55513271
 # Google Analytics
 ga_track_id: UA-91647085-1            # Format: UA-xxxxxx-xx
 ga_domain: auto

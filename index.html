@@ -19,7 +19,7 @@ description: "<img class='emoji' height='20' width='20' src='https://assets-cdn.
         </div>
     </a>
     <p class="post-meta">
-        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
+        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%Y-%m-%d" }} <!-- post.date | date: "%B %-d, %Y" -->
     </p>
 </div>
 <hr>
