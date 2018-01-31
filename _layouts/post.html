@@ -11,6 +11,13 @@ layout: default
     header.intro-header{
         position: relative;
         background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')
+        
+        background-image: -webkit-gradient(linear,left top,right top,from(#1278f6),to(#00b4aa));
+        background-image: -webkit-linear-gradient(left,#1278f6,#00b4aa);
+        background-image: -moz-linear-gradient(left,#1278f6,#00b4aa);
+        background-image: linear-gradient(to right,#1278f6,#00b4aa);
+        height: 60px;
+        overflow: hidden;
     }
 
     {% if page.header-mask %}
@@ -52,13 +59,17 @@ layout: default
 <article> 
     <div class="container">
         <div class="row">
-
-    <!-- Post Container -->
+            <div class="
+                col-lg-10 col-lg-offset-0
+                col-md-10 col-md-offset-1">
+                <h2 class="article-title {% if page.type == 'T' %}t-t{% else %}{% if page.type == 'R' %}t-r{% else %}t-o{% endif %}{% endif %}">{{ page.title }}</h2>
+                <span class="meta text-muted"><i class="fa fa-clock-o" aria-hidden="true"></i> {{ page.date | date: "%Y-%m-%d %H:%M" }}</span>
+            </div>
+            <!-- Post Container -->
             <div class="
                 col-lg-10 col-lg-offset-0
                 col-md-10 col-md-offset-1
                 post-container">
-
 				{{ content }}
 
                 <hr>
@@ -278,6 +289,10 @@ layout: default
             left: -0.75em;
             font-size: 1.1em;
             margin-top : -0.1em;
+        }
+        .anchorjs-link::after {
+            color: #fff !important;
+            opacity: 0 !important;
         }
     }
 </style>

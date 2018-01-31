@@ -6,6 +6,7 @@ date:       2017-03-17 18:54:00
 author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
 catalog: true
+type: "T"
 tags:
     - Spring
 ---

@@ -6,9 +6,7 @@ description: "<img class='emoji' height='20' width='20' src='https://assets-cdn.
 {% for post in paginator.posts %}
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title">
-            {{ post.title }}
-        </h2>
+        <h2 class="post-title article-title {% if post.type == 'T' %}t-t{% else %}{% if post.type == 'R' %}t-r{% else %}t-o{% endif %}{% endif %}">{{ post.title }}</h2>
         {% if post.subtitle %}
         <h4 class="post-subtitle">
             {{ post.subtitle }}
