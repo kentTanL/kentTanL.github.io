@@ -1090,16 +1090,30 @@ img::-moz-selection {
   color: #ddd;
 }
 .article-title::before {
-  content: '原';
-  background-color: #5cb85c;
   color: #fff;
-  padding: .2em .6em .3em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
+  /*padding: .3em .4em .2em;*/
+  padding: 4px 6px 3px;
+  font-size: 60%;
+  font-weight: 500;
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  vertical-align: baseline;
+  vertical-align: middle;
   border-radius: .25em;
+  margin-right: 8px;
+}
+
+.article-title.t-o::before {
+  content: '原';
+  background-color: #5cb85c;
+}
+
+.article-title.t-r::before {
+  content: '转';
+  background-color: #f0ad4e;
+}
+
+.article-title.t-t::before {
+  content: '译';
+  background-color: #d9534f;
 }
