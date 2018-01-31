@@ -1,4 +1,5 @@
 title: Kent's blog
+SEOTitle: Kent 的个人博客
 description: 路漫漫其修远兮
 paginate: 5
 paginate_path: "page:num"
