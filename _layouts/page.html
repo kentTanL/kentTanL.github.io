@@ -111,16 +111,21 @@ header-img: "img/banner.png"
                 {% if site.featured-tags %}
                 <section class="box">
                     <!--<hr class="hidden-sm hidden-xs">-->
-                    <h5><a href="{{'/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
+                    <h5><a href="{{'/tags/' | prepend: site.baseurl }}">TAGS</a></h5> <!-- FEATURED -->
                     <div class="tags">
                         {% for tag in site.tags %}
                             {% if tag[1].size > {{site.featured-condition-size}} %}
+                                <a class="f-tag" href="{{ site.baseurl }}/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
+                                    {{ tag[0] }}
+                                </a>
+                            {% else %}
                                 <a href="{{ site.baseurl }}/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
                                     {{ tag[0] }}
                                 </a>
                             {% endif %}
                         {% endfor %}
                     </div>
+                    <!-- 标签云 -->
                 </section>
                 {% endif %}
             </div>
