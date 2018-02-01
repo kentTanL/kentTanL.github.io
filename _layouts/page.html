@@ -4,35 +4,38 @@ header-img: "img/banner.png"
 ---
 <!-- 临时更改，看看效果先 -->
 <style type="text/css">
-    header.intro-header{
+    /*header.intro-header{
         background-image: -webkit-gradient(linear,left top,right top,from(#1278f6),to(#00b4aa));
         background-image: -webkit-linear-gradient(left,#1278f6,#00b4aa);
         background-image: -moz-linear-gradient(left,#1278f6,#00b4aa);
         background-image: linear-gradient(to right,#1278f6,#00b4aa);
         height: 60px;
         overflow: hidden;
-    }
+    }*/
 </style>
-
+<!--
 <div class="page-header intro-header hide">
       <div class="site-heading">
         <h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1>
         <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
       </div>
 </div>
+-->
 
 <!-- Page Header -->
-<header class="intro-header" style="/*background-color: #005289;background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')*/">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading no-padding">
-                    <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">{{ page.description }}</span>
+<header class="intro-header" style="background-color: #005289;background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+    <div class="banner-mask">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                    <div class="site-heading no-padding">
+                        <h2>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h2>
+                        <!--<hr class="small">-->
+                        <span class="subheading">{{ page.description }}</span>
+                    </div>
                 </div>
+                
             </div>
-            
         </div>
     </div>
 </header>
@@ -85,26 +88,29 @@ header-img: "img/banner.png"
 <!-- USE SIDEBAR -->
     <!-- PostList Container -->
     		<div class="
-                col-lg-10 col-lg-offset-0
-                col-md-10 col-md-offset-0
+                col-lg-9 col-lg-offset-0
+                col-md-9 col-md-offset-0
                 col-sm-12
                 col-xs-12
                 postlist-container
             ">
-    			{{ content }}
+                <div class="box">
+                    {{ content }}
+                </div>
     		</div>
     <!-- Sidebar Container -->
             <div class="
-                col-lg-2 col-lg-offset-0
-                col-md-2 col-md-offset-0
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
                 col-sm-12
                 col-xs-12
                 sidebar-container
+                catalog-container
             ">
                 <!-- Featured Tags -->
                 {% if site.featured-tags %}
-                <section>
-                    <hr class="hidden-sm hidden-xs">
+                <section class="box">
+                    <!--<hr class="hidden-sm hidden-xs">-->
                     <h5><a href="{{'/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
                     <div class="tags">
                         {% for tag in site.tags %}
@@ -117,10 +123,18 @@ header-img: "img/banner.png"
                     </div>
                 </section>
                 {% endif %}
-
+            </div>
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+                catalog-container
+            ">
                 <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="{{'/about/' | prepend: site.baseurl }}">ABOUT ME</a></h5>
+                <section class="visible-md visible-lg box mt-4">
+                    <!--<hr>--><h5><a href="{{'/about/' | prepend: site.baseurl }}">ABOUT ME</a></h5>
                     <div class="short-about">
                         {% if site.sidebar-avatar %}
                             <img src="{{site.sidebar-avatar}}" />
@@ -128,6 +142,12 @@ header-img: "img/banner.png"
                         {% if site.sidebar-about-description %}
                             <p>{{site.sidebar-about-description}}</p>
                         {% endif %}
+                        <ul class="list-inline list-medal">
+                            <li><img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/chizhiyihengmiddle.png" alt="持之以恒" align="absmiddle"></li>
+                            <li><img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/weiruanmvpmiddle.png" alt="微软MVP" align="absmiddle"></li>
+                            <li><img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/zhuanlandarenmiddle.png" alt="专栏达人" align="absmiddle"></li>
+                            <li><img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhuanjiamiddle.png" alt="博客专家" align="absmiddle"></li>
+                        </ul>
                         <!-- SNS Link -->
                         <ul class="list-inline">
                             {% if site.RSS %}
@@ -196,6 +216,17 @@ header-img: "img/banner.png"
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if site.csdn_username %}
+                            <li>
+                                <a target="_blank" href="http://blog.csdn.net/{{ site.csdn_username }}" >
+                                    <span class="fa-stack fa-lg">
+                                        <!-- <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-firefox fa-stack-1x fa-inverse"></i> -->
+                                        <img class="fa fa-stack-2x block" src="/img/csdn.svg" style="width:100%; padding: 3px; cursor:pointer;" />
                                     </span>
                                 </a>
                             </li>

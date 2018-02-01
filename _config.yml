@@ -1,12 +1,18 @@
 title: Kent's blog
 SEOTitle: Kent 的个人博客
-description: 路漫漫其修远兮
+description: github 博客, kent 的个人博客
 paginate: 5
 paginate_path: "page:num"
 show_downloads: true
 theme: 
 gems: [jekyll-paginate]
 header-img: "img/banner.png"
+
+sidebar-avatar: "http://avatar.csdn.net/C/B/4/1_t894690230.jpg"
+sidebar-about-description: "BarackHusseinObama"
+RSS: false
+github_username: "kentTanL"
+csdn_username: "t894690230"
 
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
