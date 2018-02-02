@@ -19,6 +19,9 @@ header.intro-header {
 .post-container {
     padding-right: 15px;
 }
+.post-preview>a>.post-title {
+    font-size: 20px;
+}
 .post-preview>a:first-child>.post-title {
     margin-top: 5px !important;
 }
