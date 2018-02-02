@@ -10,8 +10,8 @@ layout: default
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')
-        
+        background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}');
+        -webkit-background-size: contain;
         /*background-image: -webkit-gradient(linear,left top,right top,from(#1278f6),to(#00b4aa));
         background-image: -webkit-linear-gradient(left,#1278f6,#00b4aa);
         background-image: -moz-linear-gradient(left,#1278f6,#00b4aa);
