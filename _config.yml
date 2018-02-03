@@ -33,3 +33,8 @@ ba_track_id: 8eb5262d38c50c342a631d2c55513271
 # Google Analytics
 ga_track_id: UA-91647085-1            # Format: UA-xxxxxx-xx
 ga_domain: auto
+
+leancloud:
+  enable: true
+  app_id: stdyNj3KQ9F5wyp35RW7ENIQ-gzGzoHsz
+  app_key: xXjunyzr1jBKBsGrETSGI2Nm
