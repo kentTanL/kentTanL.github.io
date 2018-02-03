@@ -10,7 +10,7 @@ header-img: "img/banner.png"
 
 sidebar-avatar: "http://avatar.csdn.net/C/B/4/1_t894690230.jpg"
 sidebar-about-description: "BarackHusseinObama"
-RSS: false
+RSS: true
 github_username: "kentTanL"
 csdn_username: "t894690230"
 
