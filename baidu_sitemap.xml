@@ -4,10 +4,10 @@ layout: none
 
 <?xml version="1.0" encoding="utf-8"?>
 <urlset>
-	{% for post in site.posts limit:100 %}  
-		<url>
-			<loc>{{ site.baseurl}}{{ site.url }}{{ post.url }}</loc>
-			<lastmod>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</lastmod>
-		</url>
-	{% endfor %} 
+    {% for post in site.posts limit:100 %}  
+        <url>
+            <loc>{{ site.baseurl}}{{ site.url }}{{ post.url }}</loc>
+            <lastmod>{{ post.date | date: "%Y-%m-%d" }}</lastmod>
+        </url>
+    {% endfor %} 
 </urlset>
