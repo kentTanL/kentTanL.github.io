@@ -11,10 +11,10 @@ layout: default
     header.intro-header{
         position: relative;
         background: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}');
-        -webkit-background-size: contain;
+        /*-webkit-background-size: contain;
         -moz-background-size: contain;
         background-size: contain;
-        -o-background-size: contain;
+        -o-background-size: contain;*/
 	
         /*background-image: -webkit-gradient(linear,left top,right top,from(#1278f6),to(#00b4aa));
         background-image: -webkit-linear-gradient(left,#1278f6,#00b4aa);
@@ -36,6 +36,7 @@ layout: default
 <header class="intro-header" >
     <div class="header-mask"></div>
     <div class="container">
+        <!--
         <div class="row">
             <div class="col-lg-10 col-lg-offset-0 col-md-10 col-md-offset-1">
 				<div class="post-heading">
@@ -55,13 +56,13 @@ layout: default
 				  <span class="">{{ page.date | date: "%Y-%m-%d" }}</span>
 				  {% if site.leancloud.enable %}
 				       <span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}">
-					<span class="post-meta-divider">|</span>
-					<span class="post-meta-item-text"> 阅读:  </span>
-					<span class="leancloud-visitors-count"></span>
+					    <span class="post-meta-divider">|</span>
+					    <span class="post-meta-item-text"> 阅读:  </span>
+					    <span class="leancloud-visitors-count"></span>
 				       </span>
 				   {% endif %}
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </header>
@@ -82,6 +83,15 @@ layout: default
                 col-md-9 col-md-offset-1
                 post-container">
                 <div class="box">
+                    <h3 class="article-title {% if page.type == 'T' %}t-t{% else %}{% if page.type == 'R' %}t-r{% else %}t-o{% endif %}{% endif %}">{{ page.title }}</h3>
+                    <span class="meta text-muted">{{ page.date | date: "%Y-%m-%d %H:%M" }}</span>
+                    {% if site.leancloud.enable %}
+                        <span id="{{ page.url }}" class="leancloud_visitors ml-3" data-flag-title="{{ page.title }}">
+                            <span class="post-meta-item-text text-muted"> 阅读:  </span>
+                            <span class="leancloud-visitors-count text-muted"></span>
+                        </span>
+                    {% endif %}
+
                     {{ content }}
                 </div>
                 <hr>
@@ -164,7 +174,7 @@ layout: default
             sidebar-container
             catalog-container">
             <section class="box">
-                <!--<hr class="hidden-sm hidden-xs">-->
+                <hr class="hidden-sm hidden-xs">
                 <h5><a href="{{'/tags/' | prepend: site.baseurl }}">− Page Tags</a></h5>
                 <div class="tags">
                     {% for tag in page.tags %}
@@ -183,7 +193,7 @@ layout: default
                 sidebar-container
                 catalog-container">
                 <div class="side-catalog catalog-container box mt-4">
-                    <!--<hr class="hidden-sm hidden-xs">-->
+                    <hr class="hidden-sm hidden-xs">
                     <h5>
                         <a class="catalog-toggle" href="#">Catalog</a>
                     </h5>

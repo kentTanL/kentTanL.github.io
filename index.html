@@ -7,18 +7,21 @@ description: "<img class='emoji' height='20' width='20' src='https://assets-cdn.
 <div class="post-preview">
     <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">
         <h2 class="post-title article-title {% if post.type == 'T' %}t-t{% else %}{% if post.type == 'R' %}t-r{% else %}t-o{% endif %}{% endif %}">{{ post.title }}</h2>
+        <!--
         {% if post.subtitle %}
         <h4 class="post-subtitle">
             {{ post.subtitle }}
         </h4>
         {% endif %}
-        <div class="post-content-preview">
-            {{ post.content | strip_html | truncate:200 }}
-        </div>
+        -->
     </a>
+    <div class="post-content-preview">
+        {{ post.content | strip_html | truncate:200 }} <a href="{{ post.url | prepend: site.baseurl }}">[继续阅读...]</a>
+    </div>
+    
     <p class="post-meta">
-        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%Y-%m-%d" }} <!-- post.date | date: "%B %-d, %Y" -->
-        
+        <!-- Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%Y-%m-%d" }} --> <!-- post.date | date: "%B %-d, %Y" -->
+        Posted on {{ post.date | date: "%Y-%m-%d" }} 
         {% if site.leancloud.enable %}
             <span id="{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}">
              <span class="post-meta-divider">|</span>
@@ -28,7 +31,7 @@ description: "<img class='emoji' height='20' width='20' src='https://assets-cdn.
         {% endif %}
     </p>
 </div>
-<hr>
+<hr class="dashed">
 {% endfor %}
 
 <!-- Pager -->
