@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "2017 年的证书"
+title:      "Secure Coding 和阿里巴巴 java 认证证书 [2017年]"
 date:       2018-02-04 20:09:00
 author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
