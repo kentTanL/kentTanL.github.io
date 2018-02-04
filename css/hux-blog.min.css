@@ -81,3 +81,9 @@ a.f-tag {
 .circle.green {
     background-color: #34c84a;
 }
+.pager a {
+    max-width: 50%;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
