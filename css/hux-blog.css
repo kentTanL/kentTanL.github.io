@@ -1089,44 +1089,23 @@ img::-moz-selection {
 .page-fullscreen footer .copyright a:hover {
   color: #ddd;
 }
-.article-title::before {
-  color: #fff;
-  /*padding: .3em .4em .2em;*/
-  padding: 4px 6px 3px;
-  font-size: 60%;
-  font-weight: 500;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  border-radius: .25em;
-  margin-right: 8px;
-}
-
-.article-title.t-o::before {
-  content: '原';
-  background-color: #5cb85c;
-}
-
-.article-title.t-r::before {
-  content: '转';
-  background-color: #f0ad4e;
-}
-
-.article-title.t-t::before {
-  content: '译';
-  background-color: #d9534f;
-}
+.article-title.t-o::before { 
+  content: '原';background-color: #5cb85c;}.article-title.t-r::before {content: '转';background-color: #f0ad4e;}.article-title.t-t::before {content: '译';background-color: #d9534f;}
 
 body {
-  background: #ebebeb;
+  background: #fff;
 }
 .banner-mask {
   background: rgba(0,0,0, .5);
 }
 header.intro-header {
-  box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
+  /*box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);*/
   border-bottom: 2px solid #e1e1e1;
+  height: 60px;
+  overflow: hidden;
+}
+.navbar-custom .nav li a {
+  font-size: 14px;
 }
 .box {
   background: #fff;
@@ -1136,11 +1115,34 @@ header.intro-header {
 .post-container {
   padding-right: 15px;
 }
+.post-preview>.post-meta {
+  font-family: 'microsoft yahei';
+  color: gray;
+  font-size: 14px;
+  font-style: normal;
+  margin-top: 10px;
+}
+.post-preview>a>.post-title {
+  font-size: 20px;
+  font-weight: normal;
+}
 .post-preview>a:first-child>.post-title {
   margin-top: 5px !important;
 }
+.post-content-preview:hover {
+  color: #a3a3a3;
+}
+.post-content-preview a {
+  color: #205caa;
+}
+hr.dashed {
+  border-style: dashed;
+}
 .mt-4 {
   margin-top: 16px !important;
+}
+.ml-3 {
+  margin-left: 16px !important;
 }
 .side-catalog {
   display: block;
@@ -1148,4 +1150,25 @@ header.intro-header {
   height: auto;
   padding-bottom: 40px;
   width: 195px;
+}
+a.f-tag {
+  border-color: #337ab7 !important;
+  color: #31708f !important;
+}
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  height: 1em;
+  margin-right: 0.1em;
+  width: 1em;
+}
+.circle.red {
+  background-color: #fc625d;
+}
+.circle.yellow {
+  background-color: #fdbc40;
+}
+.circle.green {
+  background-color: #34c84a;
 }
