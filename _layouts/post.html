@@ -81,7 +81,7 @@ layout: default
             <div class="
                 col-lg-9 col-lg-offset-0
                 col-md-9 col-md-offset-1
-                post-container">
+                ">
                 <div class="box">
                     <h3 class="article-title {% if page.type == 'T' %}t-t{% else %}{% if page.type == 'R' %}t-r{% else %}t-o{% endif %}{% endif %}">{{ page.title }}</h3>
                     <span class="meta text-muted">{{ page.date | date: "%Y-%m-%d %H:%M" }}</span>
@@ -91,8 +91,9 @@ layout: default
                             <span class="leancloud-visitors-count text-muted"></span>
                         </span>
                     {% endif %}
-
-                    {{ content }}
+                    <div class="post-container">
+                        {{ content }}
+                    </div>
                 </div>
                 <hr>
 

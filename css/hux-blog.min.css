@@ -2,7 +2,7 @@
     content: '原';background-color: #5cb85c;}.article-title.t-r::before {content: '转';background-color: #f0ad4e;}.article-title.t-t::before {content: '译';background-color: #d9534f;}
 
 body {
-    /*background: #ebebeb;*/
+    background: #fff;
 }
 .banner-mask {
     background: rgba(0,0,0, .5);
