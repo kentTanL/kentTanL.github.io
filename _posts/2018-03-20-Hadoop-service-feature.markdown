@@ -21,13 +21,29 @@ tags:
 
 `NameNode`执行文件系统的`namespace`操作，比如打开、关闭、重命名文件或目录。同时它还确定`block`到`DataNode`节点的映射。
 
-同时它会周期性地从集群中的每个Datanode接收心跳信号和 block 状态报告(Blockreport)。接收到心跳信号意味着该Datanode节点工作正常。block 状态报告包含了一个该Datanode上所有 block 的列表。
+
+**Namenode 详细功能如下：**
+- 它是维护和管理 Datanode 的主守护进程；
+- 它记录存储在集群中的所有文件的元数据，例如 block 的位置、文件大小、权限、层次结构等。有两个文件与元数据关联：
+    - FsImage：它包含自 Namenode 开始以来文件的 namespace 的完整状态；
+    - EditLogs：它包含最近对文件系统进行的与最新 FsImage 相关的所有修改。
+- 它记录了发生在文件系统元数据上的每个更改。例如，如果一个文件在 HDFS 中被删除，Namenode 会立即在 EditLog 中记录这个操作。
+- 它定期从集群中的所有 Datanode 接收心跳信息和 block 报告，以确保 Datanode - 处于活动状态；
+- 它保留了 HDFS 中所有 block 的记录以及这些 block 所在的节点；
+- 它负责管理所有 block 的复制；
+- 在 Datanode 失败的情况下，Namenode 会为副本选择新的 Datanode，平衡磁盘使用并管理到 Datanode 的通信流量。
 
 ### DataNode
 
 在集群内部，文件被分成一个或多个`block`，这些`block`被存储在一组`DataNode`中，而`DataNode`则用于管理它所在节点上的存储。
 
 Datanode负责处理文件系统客户端的读写请求。在Namenode的统一调度下进行数据块的创建、删除和复制。
+
+**Datanode 详细功能如下：**
+- 这些是丛属守护进行或在每台从属机器上运行的进程；
+- 实际的数据存储在 Datanode 上；
+- 执行文件系统客户端底层的读写请求；
+- 定期向 Namenode 发送心跳报告 HDFS 的整体健康状况，默认频率为 3 秒
 
 NameNode and DataNode 更多请参考：[HDFS Architecture Guide](https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html#NameNode+and+DataNodes)
  
