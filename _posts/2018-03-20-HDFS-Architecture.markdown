@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Hadoop 学习（2）HDFS 架构与工作原理"
-date:       2018-02-04 20:09:00
+date:       2018-04-05 23:01:00
 author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
 catalog: true
