@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Hadoop 各服务的作用简述"
+title:      "Hadoop 学习（1）Hadoop 各服务的作用简述"
 date:       2018-02-04 20:09:00
 author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
