@@ -32,7 +32,7 @@ Meta 表是一个特殊的 HBase 表，它保存了集群中所有 Region 的列
     - info:serverStartCode（保存.META.的RegionServer进程的启动时间）
 ```
 
-> Meta 表中的 RowKey 使用 [table],[region start key],[region id] 的组合形式，当客户端使用 rowkey 来访问一个 table 中的数据时，解析 Meta 表的 rowkey 便能确定所访问数据在 Meta 表中的位置。
+> 根据 Meta 表中的数据，可以确定客户端所访问的 RowKey 所处的实际位置。
 
 ![META table](/img/2018-05-27-hbase-3/1.png)
 
