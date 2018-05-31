@@ -34,7 +34,7 @@ Meta 表是一个特殊的 HBase 表，它保存了集群中所有 Region 的列
 
 > Meta 表中的 RowKey 使用 [table],[region start key],[region id] 的组合形式，当客户端使用 rowkey 来访问一个 table 中的数据时，解析 Meta 表的 rowkey 便能确定所访问数据在 Meta 表中的位置。
 
-![META table](https://img-blog.csdn.net/20180530202103583?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![META table](/img/2018-05-27-hbase-3/1.png)
 
 # 二、读取与缓存元数据（首次读取或写入）
 
@@ -46,7 +46,7 @@ Meta 表是一个特殊的 HBase 表，它保存了集群中所有 Region 的列
 
 对于之后的读取，客户端使用缓存的信息来检索 META 的位置和已经读取过的行键位置信息。随着时间的推移，它将不需要查询 META 表，直到由于某个 Region 已经移动或丢失，客户端才会重新查询并更新缓存。
 
-![write and read first](https://img-blog.csdn.net/20180530202115891?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![write and read first](/img/2018-05-27-hbase-3/2.png)
 
 # 三、HBase 写入原理
 
@@ -63,17 +63,17 @@ Meta 表是一个特殊的 HBase 表，它保存了集群中所有 Region 的列
 - 编辑 WAL 文件，将数据附加到 WAL 文件的末尾（满足 HDFS 只允许追加的特性）；
 - 如果服务器崩溃，那么将通过 WAL 文件恢复尚未保存的数据；
 
-![write WAL](https://img-blog.csdn.net/20180530202128971?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![write WAL](/img/2018-05-27-hbase-3/3.png)
 
 ### 2. 写入并排序 MemStore 缓存数据
 
 一旦数据写入 WAL 成功后，数据将被放入 MemStore 中，然后将 Put 请求确认返回给客户端。客户端接收到确认信息后，对于客户端来说，此次操作便结束了。
 
-![写入并排序 MemStore 缓存数据](https://img-blog.csdn.net/20180530202140919?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![写入并排序 MemStore 缓存数据](/img/2018-05-27-hbase-3/4.png)
 
 数据放入 MemStore 中后，HBase 不会立即刷新数据到磁盘，而是先更新存储数据使其作为有序的 KeyValues 结构，与存储在 HFile 中的结构相同，并等待 MemStore 累积到足够的数据时才会刷新数据以写入磁盘。
 
-![写入并排序 MemStore 缓存数据](https://img-blog.csdn.net/20180530202150233?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![写入并排序 MemStore 缓存数据](/img/2018-05-27-hbase-3/5.png)
 
 ### 3. 刷新缓存中的数据，并写入到 HFile磁盘
 
@@ -97,7 +97,7 @@ HBase 将通过以下步骤来合并 BlockCache、MemStore 和 HFile 中的数�
 
 > 注：Bloom 过滤器确定的结果并不一定总是准确的，但是否定的结果却一定保证准确。
 
-![Merge](https://img-blog.csdn.net/20180530202203785?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Merge](/img/2018-05-27-hbase-3/6.png)
 
 #### 可能影响性能的因素
 

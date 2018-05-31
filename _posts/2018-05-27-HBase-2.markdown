@@ -29,7 +29,7 @@ Region Servers 为客户端的读写提供数据，访问数据时，客户端�
 
 所有的 HBase 数据都存储在 HDFS 中，即 DataNode 负责存储 RegionServers 正在管理的数据。实际的架构中，会在每个 DataNode 节点上部署一个对应的 RegionSevers，这使得 RegionSevers 所管理的数据距离实际的存储更接近，这也符合了 HDFS 目标之一：移动计算而非移动数据。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193252243?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/1.png)
 
 ## HRegionServers
 
@@ -52,7 +52,7 @@ Region 是 Table 可用性和分布的基本元素，由每个列族（ColumnFam
 
 **分区存储：** HBase 按照行键（RowKey）范围水平划分 Regions，一个 Region 包含了该 Region 的 startKey （开始键）到 endKey （结束键）之间的所有行。这些 Region 被分配给各个 RegionServers，每个 RegionServer 可以服务约 1000 个 Region。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193303875?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/2.png)
 
 ## HMaster
 
@@ -67,7 +67,7 @@ HMaster 是 Master Server 的实现，它负责监视集群中的所有 RegionSe
     - 管理 Region 的移动、分配、取消分配
     - 权限控制
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193312350?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/3.png)
 
 同时，HMaster  运行着几个后台进程，包括：
 
@@ -78,13 +78,13 @@ HMaster 是 Master Server 的实现，它负责监视集群中的所有 RegionSe
 
 HBase 使用 Zookeeper 作为分布式协调服务来维护集群中的服务器状态。Zookeeper 维护哪些服务器处于活动状态并可用，并提供服务器故障通知。Zookeeper 使用共识来保证共同的共享状态。根据 Zookeeper 使用的 Paxos 算法特性，至少应该有三至五台机器达成共识。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193323114?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/4.png)
 
 # 二、组件间如何协同工作
 
 **使用 Zookeeper 共享成员信息：** HBase 使用 Zookeeper 来协调 HMasters 与 RegionServers 成员的共享状态信息。RegionServers 和活动状态的 HMaster 通过会话连接到 Zookeeper，并在 Zookeeper 上创建一个临时节点以表示其处于活动状态。Zookeeper 则通过接收各成员的心跳信息来维护会话的临时节点，如果RegionServers 或活动的 HMaster 未能向 Zookeeper 发送心跳，则代表会话过期，Zookeeper 将删除相应的临时节点。HMaster 通过监听 Zookeeper 上 RegionServer 创建的临时节点来发现可用的 RegionServer，并监控这些节点的服务器故障。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193332885?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/5.png)
 
 **HMaster 选举：** HMaster 通过争夺创建一个短暂的节点，Zookeeper 会选择第一个来确保只有一个 HMaster 处于活动状态。活动的 HMaster 将心跳发送到 Zookeeper，非活动状态的 HMaster 将监听活动的 HMaster 故障的通知，一旦发现活动的 HMaster 失败，则非活动的 HMaster 将变为活动状态。
 
@@ -97,7 +97,7 @@ RegionServer 作为管理 Region，并直接与客户端传输数据的节点，
 - **MemStore：** 写入缓存，它存储尚未写入磁盘的新数据，用以减少磁盘 IO 频率。它在写入磁盘之前将进行排序。**++每个 Region 的每个列族都有一个 MemStore。++**
 - **HFiles：** 用于将行数据作为已排序的 KeyValues 结构存储在磁盘上的最终文件，一个 Region 通常包含多个 HFile。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193347121?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/6.png)
 
 ### HFile （StoreFile）
 
@@ -107,7 +107,7 @@ HBase 的数据最终被存储在 HFile 中，HFile 是保存在 HDFS 中的物�
 
 当 MemStore 累积足够的数据时（默认为128M），整个已排序的 KeyValues 集将被写入 HDFS 中的新的 HFile 文件中（这是一个顺序写入，避免了移动磁盘驱动器磁头，所以它的速度会非常快）。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193357450?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/7.png)
 
 
 #### KeyVelue
@@ -153,14 +153,14 @@ HFile 包含一个多层索引，它允许 HBase 在不必读取整个文件的�
 
 > 注：一个 keyValue 不会在 block 之间被拆分，即如果一个 KeyValue 大小为 8M，即使 block 大小设置是 64KB，这个 KeyValue 也将作为一个连贯的 block 被存储。
 
-![HFile 结构](https://img-blog.csdn.net/20180527193409252?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![HFile 结构](/img/2018-05-17-hbase-2/8.png)
 
 
 #### HFile 索引
 
 HFile 的索引是在 HFile 打开并保存在内存中时被加载的，它被保存在 BlockCache（即读取缓存）中，这就允许通过单个磁盘寻道来执行查找功能。
 
-![这里写图片描述](https://img-blog.csdn.net/20180527193419690?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![这里写图片描述](/img/2018-05-17-hbase-2/9.png)
 
 ## 参考链接
 
