@@ -88,8 +88,8 @@ spark-submit --master yarn --executor-memory 512M  ~/spark-mock-0.0.1-SNAPSHOT.j
  
 2\. 在 Cloudera Manager 中，配置资源池的容量大小，界面示例如下：
 
-![资源池配置界面_1](http://img.blog.csdn.net/20180119191806967?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdDg5NDY5MDIzMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
-![资源池配置界面_2](http://img.blog.csdn.net/20180119191941012?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdDg5NDY5MDIzMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![资源池配置界面_1](/img/2018-01-19-Spark_on_rarn_memory/1.png)
+![资源池配置界面_2](/img/2018-01-19-Spark_on_rarn_memory/2.png)
 
 3\. 反复提交执行与更改配置，并观察结果
 
@@ -113,7 +113,7 @@ java.lang.IllegalArgumentException: Required executor memory (1024+384 MB) is ab
 
 2\. 提交时指定`--executor-memory=512M`，资源池`kt94`设置`Memory (Min / Max) ~= 100MiB / 5GiB`时，即`AM memory < max memory`时，运行正常，资源池使用情况如下图：  
 
-![这里写图片描述](http://img.blog.csdn.net/20180119192028594?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdDg5NDY5MDIzMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![这里写图片描述](/img/2018-01-19-Spark_on_rarn_memory/3.png)
 
 AM 被分配`3GiB`的容量，小于`5GiB`
 
@@ -134,13 +134,13 @@ AM 被分配`3GiB`的容量，小于`5GiB`
 
 同时资源池`kt94`，该任务 一直在`Pending Containers`（待定的容器）中，资源池状态示例如下图所示：
 
-![这里写图片描述](http://img.blog.csdn.net/20180119192101112?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdDg5NDY5MDIzMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![这里写图片描述](/img/2018-01-19-Spark_on_rarn_memory/4.png)
 
 任务简介如下图所示：
 
-![这里写图片描述](http://img.blog.csdn.net/20180119192115732?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdDg5NDY5MDIzMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![这里写图片描述](/img/2018-01-19-Spark_on_rarn_memory/5.png)
 
-![这里写图片描述](http://img.blog.csdn.net/20180119192124061?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdDg5NDY5MDIzMA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![这里写图片描述](/img/2018-01-19-Spark_on_rarn_memory/6.png)
 
 此时并未分配内存给该任务，而该任务则一直处于`ACCEPTED`状态，说明配置是生效的。
 
