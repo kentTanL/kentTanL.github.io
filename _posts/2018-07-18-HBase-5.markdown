@@ -1,0 +1,161 @@
+---
+layout:     post
+title:      "Hadoop 原理学习（7）HBase 架构与工作原理5 - Region 的部分特性"
+date:       2018-07-18 23:20:00
+author:     "Kent"
+header-img: "img/post-bg-2016.jpg"
+catalog: true
+tags:
+    - hadoop, hbase
+---
+
+[TOC]
+
+# Region
+
+Region 是表格可用性和分布的基本元素，由列族（Column Family）构成的 Store 组成。对象的层次结构如下：
+
+```
+- Table
+    - Region
+        - Store         （由每个 Region 中的列族组成的存储块）
+            - MemStore  （每个 Region 中存储在内存中的 Store）
+            - StoreFile （每个 Region 中被持久化后的 Store）
+                - Block （StoreFile 内被分块存储后的块）
+```
+
+其中 StoreFile 在 HDFS 中的存储路径为：
+
+```
+/hbase
+    /data
+        /<Namespace>                    (Namespaces in the cluster)
+            /<Table>                    (Tables in the cluster)
+                /<Region>               (Regions for the table)
+                    /<ColumnFamily>     (ColumnFamilies for the Region for the table)
+                        /<StoreFile>    (StoreFiles for the ColumnFamily for the Regions for the table)
+```
+
+### 1. Region 数量
+
+通常而言，HBase 被设计成每台服务器运行一个数量较小的（20 - 200）但大小相对较大（5 - 20 GB）的 Region。那么为什么应该保持 Region 数量较低？
+
+以下是保持较低 Region 数量的一些原因：
+
+1. 每个 MemStore 需要 2MB 的 MSLAB（MemStore-local 分配的 buffer）- 相当于每个 Region 的每个列族（ClounmFamily）需要 2MB 的 MSLAB。那么 1000 个有 2 个列族的 Region 将使用 2MB * 1000 * 2 = 4000MB ~= 3.9GB 的堆内存，甚至都还没有开始存储数据。注：MSLAB 的大小是可配置的，默认为 2MB.
+
+2. 如果以相同的速率填充所有的 Region，则全局内存使用情况会在因为 Region 太多而产生 compaction 操作时，强制进行微小的刷新。举个例子：平均填充1000个Region（有一个列族），假如有5GB的全局 MemStore 使用的下限（RegionServer有一个大的堆），一旦它达到5GB，它将强制刷新最大的 Region，那时每个 Region 大约都是 5MB 的数据，所以它会刷新这个 Region。稍后再插入 5MB，它将刷新另一个 Region，依次类推。目前这个是 Region 数量的主要限制因素。更多请参阅。。。  
+> 举个实例来说：目前的一个集群单台 RegionServer 分配的内存大小为 32GB，其中所有的 MemStore 的最大大小比例设置为 0.4，即最大大小为 32GB * 0.4 = 12.8GB
+
+3. Master 很讨厌太多的 Region，因为这可能需要大量的时间分配并批量移动。
+
+4. 在比较旧版本的 HBase（HFile v2, 0.90 之前的版本）中，几个 RegionServer 上的大量的 Region 会导致存储文件索引上升，增加堆使用量，并可能在 RS 导致内存压力或 OOME。
+
+5. 另外一个问题是 Region 数量对 MapReduce 作业的影响。每个 HBase Region 都有一个映射器是很典型的，因此，每个 RS 仅托管 5 个 Region 可能不足以获得足够数量的 MapReduce 作业任务，但是 1000 个 Region 又将生成太多的任务。
+
+
+请参考[Determining region count and size](https://hbase.apache.org/book.html#ops.capacity.regions)配置 Region 数量。
+
+### 2. Region-RegionServer 的分配
+
+当 HBase 启动 RegionServer 分配时，简要过程如下：
+
+1. Master 在启动时调用 AssignmentManager；
+2. AssignmentManager 查看 hbase:meta 中的现有 Region 分配；
+3. 如果 Region 分配仍然有效（即，如果 RegionServer 仍处于联机状态），则保留分配；
+4. 如果分配无效，则调用 LoadBalancerFactory 来分配 Region。负载均衡器将 Region 分配给 RegionServer；
+5. hbase:meta 使用 RegionServer 分配（如果需要）和 RegionServer 的开始码（RegionServer进程的开始时间）在 RegionServer 打开 Region 时进行更新。
+
+### 3. 故障转移
+
+当 RegionServer 失败时：
+
+1. 由于 RegionServer 关闭，它上面的 Region 会立即变得不可用；
+2. Master 将检测到 RegionServer 失败；
+3. Region 分配将被视作无效，并将像启动顺序一个被重新分配；
+4. 重新尝试进行中的查询，不会丢失；
+5. 在以下时间段内，操作将切换到新的 RegionServer：
+```
+ZooKeeper session timeout + split time + assignment/replay time
+```
+
+### 4. 负载平衡
+
+Region 可以被负载平衡器（LoadBalancer）定期的移动。
+
+### 5. 状态转换
+
+HBase 维持每个 Region 的状态，并将它们的状态保存在 hbase:meat 表中，hbase:meta 的 Region 状态则保存在 Zookeeper 中。在 Master Web UI 中可以查看转换中的 Region 状态。以下是可能的 Region 状态列表：
+
+- **OFFLINE:** 该 Region 处于离线状态，无法打开
+- **OPENING:** 该 Region 正在打开
+- **OPEN:** 该 Region 已经打开，并且 RegionServer 已经通知 Master
+- **FAILED_OPEN:** RegionServer 打开该 Region 失败
+- **CLOSING:** 该 Region 正在关闭
+- **CLOSED:** RegionServer 关闭了该 Region，并通知了 Master
+- **FAILED_CLOSE:** RegionSever 关闭该 Region 失败
+- **SPLITTING:** RegionServer 通知 Master Region 正在分裂（splitting）
+- **SPLIT:** RegionServer 通知 Master Region 已经完成分裂
+- **SPLITTING_NEW:** 该 Region 正在进行通过分裂创建新的 Region
+- **MERGING:** RegionServer 通知 master 该 region 正在与另外一个 region 合并
+- **MERGED:** RegionServer 通知 master 该 region 已经合并完成
+- **MERGING_NEW:** 该 Region 由两个 Region 合并完成
+
+状态转换图如下：
+
+![Region 状态变换](https://hbase.apache.org/images/region_states.png)
+
+图示说明：
+
+- 棕色：离线状态，一种特殊状态，可以是暂时的（打开之前关闭后）、最终的（被 disabled 表的 regions）或者初始的（新建表的 region）
+- 淡绿色：在线状态，region 可以为请求提供服务
+- 淡蓝色：过渡状态，瞬时的
+- 红色：失败状态，需要管理员关注，通常无法写入数据可能就是它照成的
+- 黄金：regions split/merged 后的最终状态
+- 灰色：通过 split/merged 并创建的新的 region 的初始状态
+
+#### 过渡状态描述
+
+1. Master将Region从`OFFLINE`转换成`OPENING`状态，并尝试将该区域分配给RegionServer。RegionServer可能收到也可能未收到开放Region的请求。Master会重试将打开Region请求发送RegionServer，直到RPC通过或Master用完重试。在RegionServer收到打开Region请求后，RegionServer开始打开Region；
+
+2. 如果Master重试超时，则即使RegionServer正在打开Region，Master也会通过将Region转换为`CLOSING`状态并尝试关闭它来阻止RegionServer继续打开该Region；
+
+3. RegionServer打开该Region后，它将继续尝试通知Master，直到Master将该Region转换为`OPEN`状态并通知RegionServer，该Region才算打开；
+
+4. 如果RegionServer无法打开Region，它会通知Master。然后Master将该Region转换为`CLOSED`状态，并尝试在其它的RegionServer上打开该Region；
+
+5. 如果Master无法打开某个Region，则会将Region转换为`FAILED_OPEN`状态，并且在管理员使用HBase shell操作之前或服务器死亡之前不会采取进一步的操作；
+
+6. Master将Region从`OPEN`转换为`CLOSING`状态。持有Region的RegionServer可能已经或可能未收到关闭Region请求。Maater将重试向服务器发送关闭请求，直到RPC通过或Master用尽重试；
+
+7. 如果RegionServer不在线或引发NotServingRegionException，则Master将该Region转换为`OFFLINE`状态，并将其重新分配给其它的RegionServer；
+
+8. 如果RegionServer处于联机状态，但在Master用完重试之后无法访问，则Master会将该Region移至`FAILED_CLOSE`状态，并且不会采取进一步的操作，直到操作员从HBase shell进行干预或服务器死亡；
+
+9. 如果RegionServer获得关闭Region请求，它会关闭该Region并通知Master。Master将该Reguib移至CLOSED状态并重新分配给其它的RegionServer；
+
+10. 在分配Region之前，如果Region处于`CLOSED`状态，Master会自动将Region转换为`OFFLINE`状态；
+
+11. 当一个RegionServer即将分裂（split）一个Region时，它通知Master，Master将Region从`OPEN`转换为`SPLITTING`状态，并将要创建的两个新Region添加到RegionServer。这两个Region最初处于`SPLITTING_NEW`状态。
+
+12. 在通知Master后，RegionServer开始分裂Region。一旦经过了不返回的地方，RegionServer会再次通知Master，以便Master可以更新hbase:meta表。不管怎样，在服务器通知分裂完成之前，Master不会更新Region的状态。如果分裂成功，则分裂的Region从`SPLITTING`转换为`SPLIT`状态，并且两个新的Region从`SPLITTING_NEW`转换为`OPEN`状态。
+
+13. 如果分裂失败，则分裂Region将从`SPLITTING`回到`OPEN`状态，并且创建的两个新的Region将从`SPLITTING_NEW`转换为`OFFLINE`状态；
+
+14. 当一个RegionServer即将合并（merge）两个Region时，它首先通知Master，Master将两个待合并的Region从`OPEN`转换为`MERGING`状态，并将拥有两个合并的Region内容的新的Region添加到并添加到RegionServer。新的Region最初处于`MERGING_NEW`状态。
+
+15. 通知Master后，RegionServer开始合并这两个Region。一旦经过不返回的地方，RegionServer再次通知Master，以便Master可以更新META表。但是，Master不会更新Region状态，直到RegionServer通知合并已完成。如果合并成功，则两个合并的 Region将从`MERGING`状态变为`MERGED`状态，并且新的 Region 将从`MERGING_NEW`转换为`OPEN`状态；
+
+16. 如果合并失败，则将两个合并的Region从`MERGING`更改回`OPEN`状态，并且创建的用于容纳合并Region内容的新的Region将从`MERGING_NEW`转换为`OFFLINE`状态。
+
+17. 对于处于`FAILED_OPEN`或`FAILED_CLOSE`状态的Region，Master在通过HBase Shell重新分配它们时尝试再次关闭它们。
+
+#### 可能产生的影响
+
+了解Region的状态变化过程十分重要，因为Region的状态在发生更改时，如果发生异常，很可能需要管理员人工介入。而在人工介入之前，很有可能会影响到部分表的正常使用，示例可参见：(HBase 部分表无法写入数据的异常处理)[https://blog.csdn.net/t894690230/article/details/78508862]
+
+# 参考链接
+
+- [Apache HBase ™ Reference Guide](https://hbase.apache.org/book.html#hfile)
+
+注：此文章主要为学习的笔记，其中大量的翻译了参考链接中的资料，并有改动，如有需要，请阅读原文。
