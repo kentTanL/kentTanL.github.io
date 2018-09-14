@@ -12,12 +12,14 @@
     </head>
     
     <body>
-      <div class="container" style="margin-top: 100px;">
+      <div class="container" style="margin-top: 50px;">
         <!-- <div class="alert alert-warning" role="alert">
           This is a warning alert—check it out!
         </div> -->
         <div class="row">
           <div class="col-md-6 col-sm-12">
+            <p><h1>税后工资计算器</h1></p>
+            <br>
             <form id="form">
               <!-- 税前工资 -->
               <div class="form-group row" >
@@ -53,7 +55,7 @@
                 <label for="inputPreTax" class="col-sm-3 col-form-label">公积金基数</label>
                 <div class="col-sm-9">
                   <input type="number" class="form-control" name="providentFundBase" value="0">
-                  <div class="invalid-feedback">公积金基数</div>
+                  <div class="invalid-feedback">请输入一个有效的数字</div>
                 </div>
               </div>
               <!-- 公积金比例 -->
@@ -65,7 +67,7 @@
                     <div class="input-group-append">
                       <div class="input-group-text">%</div>
                     </div>
-                    <div class="invalid-feedback">公积金比例</div>
+                    <div class="invalid-feedback">请输入一个有效的数字</div>
                   </div>
                 </div>
               </div>
@@ -86,11 +88,19 @@
             </form>
           </div>
           <div class="col-md-6 col-sm-12">
+            <div id="echarMain" style="width: 600px;height:400px;"></div>
           </div>
           <div class="col-md-6 col-sm-12">
+            <p><h4>税后工资计算结果</h4></p>
             <p>税后工资：<span data-bind="afterTax"></span></p>
             <p>社保：<span data-bind="socialSecurity"></span></p>
             <p>公积金：<span data-bind="providentFund"></span></p>
+            <p>个税：<span data-bind="personalTax"></span></p>
+
+            <p><h4>改革前：</h4></p>
+            <p>税后工资：<span data-bind="oldAfterTax"></span></p>
+            <p>个税：<span data-bind="oldPersonalTax"></span></p>
+            <p>节约个税：<span data-bind="economyPersonalTax"></span></p>
           </div>
         </div>
       </div>
@@ -100,6 +110,8 @@
         crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
         crossorigin="anonymous"></script>
+      <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts-en.common.min.js"></script>
+      <script src="https://cdn.bootcss.com/echarts/2.2.7/chart/pie.js"></script>
       <script>
         $(function() {
           var $input_preTax = $("input[name=preTax]");
@@ -147,19 +159,29 @@
             }
             
             var preTax = parseFloat($input_preTax.val());
-            var socialSecurityBase = parseFloat($input_socialSecurityBase.val());
-            var socialSecurityRatio = parseFloat($input_socialSecurityRatio.val());
-            var providentFundBase = parseFloat($input_providentFundBase.val());
-            var providentFundRatio = parseFloat($input_providentFundRatio.val());
-            var taxThreshold = parseFloat($input_taxThreshold.val());
+            var socialSecurityBase = parseFloat($input_socialSecurityBase.val()).toFixed(2);
+            var socialSecurityRatio = parseFloat($input_socialSecurityRatio.val()).toFixed(2);
+            var providentFundBase = parseFloat($input_providentFundBase.val()).toFixed(2);
+            var providentFundRatio = parseFloat($input_providentFundRatio.val()).toFixed(2);
+            var taxThreshold = parseFloat($input_taxThreshold.val()).toFixed(2);
     
-            var socialSecurity = socialSecurityBase * socialSecurityRatio / 100.0;
-            var providentFund = providentFundBase * providentFundRatio / 100.0;
-            var afterTax = afterTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold);
-    
+            var socialSecurity = (socialSecurityBase * socialSecurityRatio / 100.0).toFixed(2);
+            var providentFund = (providentFundBase * providentFundRatio / 100.0).toFixed(2);
+            var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold);
+            var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2)
+            
+            var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0);
+            var oldAfterTax = (preTax - personalTax - socialSecurity - oldPersonalTax).toFixed(2);
+
             $("[data-bind=socialSecurity]").html(socialSecurity);
             $("[data-bind=providentFund]").html(providentFund);
+            $("[data-bind=personalTax]").html(personalTax);
             $("[data-bind=afterTax]").html(afterTax);
+            $("[data-bind=oldPersonalTax]").html(oldPersonalTax);
+            $("[data-bind=oldAfterTax]").html(oldAfterTax);
+            $("[data-bind=economyPersonalTax]").html((oldPersonalTax - personalTax).toFixed(2));
+
+            buildChart([afterTax, socialSecurity, providentFund, personalTax]);
           }
     
           $("#calculateBtn").bind("click", calculate);
@@ -181,11 +203,11 @@
           return false;
         }
     
-        var afterTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold) {
+        var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold) {
           var money = preTax - socialSecurity - providentFund;
           var overflow = money - taxThreshold;
           if (overflow <= 0) {
-            return money;
+            return 0.00.toFixed(2);
           }
           
           var taxLevel = {
@@ -195,17 +217,51 @@
 
           var tax = 0;
           for (var i = 0; i < taxLevel.level.length; i ++) {
-            if (overflow <= taxLevel.level[i]) {
-                var preLevel = 0;
-                if (i > 0) {
-                    preLevel = taxLevel.level[i - 1];
-                }
+            var preLevel = 0;
+            if (i > 0) {
+              preLevel = taxLevel.level[i - 1];
+            }
+
+            if (overflow <= taxLevel.level[i]) {    
                 tax += (overflow - preLevel) * taxLevel.ratio[i];
                 break;
             }
-            tax += taxLevel.level[i] * taxLevel.ratio[i];
+            tax += (taxLevel.level[i] - preLevel) * taxLevel.ratio[i];
           }
-          return money - tax;
+          return tax.toFixed(2);
+        }
+
+        var myChart = echarts.init(document.getElementById('echarMain'));
+        var buildChart = function(data) {
+          var option = {
+            title : {
+              text: '',
+              x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} ({d}%)"
+            },
+            legend: {
+              orient: 'vertical',
+              right: 'right',
+              data: ['税后工资 ' + data[0] + ' 元', '社保 ' + data[1] + ' 元', '公积金 ' + data[2] + ' 元', '个税 ' + data[3] + ' 元']
+            },
+            series: [{
+              name: '销量',
+              type: 'pie',
+              radius : '70%',
+              center: ['40%', '60%'],
+              data: [
+                { name: '税后工资 ' + data[0] + ' 元', value: data[0] },
+                { name: '社保 ' + data[1] + ' 元', value: data[1] },
+                { name: '公积金 ' + data[2] + ' 元', value: data[2] },
+                { name: '个税 ' + data[3] + ' 元', value: data[3] },
+              ]
+            }]
+          };
+          
+          myChart.setOption(option);
         }
       </script>
     </body>
