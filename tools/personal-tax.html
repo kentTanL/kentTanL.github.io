@@ -91,44 +91,44 @@
           </div>
           <div class="col-md-3 col-sm-6">
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right"><b>税后工资计算结果</b></label>
+              <label class="col-sm-7 col-form-label text-right"><b>税后工资计算结果</b></label>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">税后工资：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="afterTax"></span></div>
+              <label class="col-sm-7 col-form-label text-right">税后工资：</label>
+              <div class="col-sm-5 col-form-label text-success">￥&nbsp;<span data-bind="afterTax"></span></div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">社保：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="socialSecurity"></span></div>
+              <label class="col-sm-7 col-form-label text-right">社保：</label>
+              <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="socialSecurity"></span></div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">公积金：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="providentFund"></span></div>
+              <label class="col-sm-7 col-form-label text-right">公积金：</label>
+              <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="providentFund"></span></div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">个税：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="personalTax"></span></div>
+              <label class="col-sm-7 col-form-label text-right">个税：</label>
+              <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="personalTax"></span></div>
             </div>
           </div>
           <div class="col-md-3 col-sm-6">
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right"><b>改革前对比</b></label>
+              <label class="col-sm-7 col-form-label text-right"><b>改革前对比</b></label>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">税后工资：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="oldAfterTax"></span></div>
+              <label class="col-sm-7 col-form-label text-right">税后工资：</label>
+              <div class="col-sm-5 col-form-label text-success">￥&nbsp;<span data-bind="oldAfterTax"></span></div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">个税：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="oldPersonalTax"></span></div>
+              <label class="col-sm-7 col-form-label text-right">个税：</label>
+              <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="oldPersonalTax"></span></div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">节约个税：</label>
-              <div class="col-sm-4  col-form-label"><span data-bind="economyPersonalTax"></span></div>
+              <label class="col-sm-7 col-form-label text-right">节约个税：</label>
+              <div class="col-sm-5 col-form-label text-success">￥+<span data-bind="economyPersonalTax"></span></div>
             </div>
             <div class="form-group row">
-              <label class="col-sm-8 col-form-label text-right">个税起征点：</label>
-              <div class="col-sm-4  col-form-label">3500.00</div>
+              <label class="col-sm-7 col-form-label text-right">个税起征点：</label>
+              <div class="col-sm-5 col-form-label text-info">￥&nbsp;3500.00</div>
             </div>
             <!-- <p>税后工资：<span data-bind="afterTax"></span></p>
             <p>社保：<span data-bind="socialSecurity"></span></p>
@@ -211,7 +211,7 @@
             var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2)
             
             var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0);
-            var oldAfterTax = (preTax - personalTax - socialSecurity - oldPersonalTax).toFixed(2);
+            var oldAfterTax = (preTax - oldPersonalTax - socialSecurity - providentFund).toFixed(2);
 
             $("[data-bind=socialSecurity]").html(socialSecurity);
             $("[data-bind=providentFund]").html(providentFund);
