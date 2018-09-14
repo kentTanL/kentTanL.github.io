@@ -17,9 +17,11 @@
           This is a warning alert—check it out!
         </div> -->
         <div class="row">
-          <div class="col-md-6 col-sm-12">
+          <div class="col-md-12 col-sm-12">
             <p><h1>税后工资计算器</h1></p>
             <br>
+          </div>
+          <div class="col-md-6 col-sm-12">
             <form id="form">
               <!-- 税前工资 -->
               <div class="form-group row" >
@@ -82,25 +84,63 @@
               <!-- Action -->
               <div class="form-group row">
                 <div class="col-sm-9 offset-sm-3">
-                  <button id="calculateBtn" type="button" class="btn btn-success">计 算</button>
+                  <button id="calculateBtn" type="button" class="btn btn-info">计 算</button>
                 </div>
               </div>
             </form>
           </div>
-          <div class="col-md-6 col-sm-12">
-            <div id="echarMain" style="width: 600px;height:400px;"></div>
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right"><b>税后工资计算结果</b></label>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">税后工资：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="afterTax"></span></div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">社保：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="socialSecurity"></span></div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">公积金：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="providentFund"></span></div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">个税：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="personalTax"></span></div>
+            </div>
           </div>
-          <div class="col-md-6 col-sm-12">
-            <p><h4>税后工资计算结果</h4></p>
-            <p>税后工资：<span data-bind="afterTax"></span></p>
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right"><b>改革前对比</b></label>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">税后工资：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="oldAfterTax"></span></div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">个税：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="oldPersonalTax"></span></div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">节约个税：</label>
+              <div class="col-sm-4  col-form-label"><span data-bind="economyPersonalTax"></span></div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-8 col-form-label text-right">个税起征点：</label>
+              <div class="col-sm-4  col-form-label">3500.00</div>
+            </div>
+            <!-- <p>税后工资：<span data-bind="afterTax"></span></p>
             <p>社保：<span data-bind="socialSecurity"></span></p>
             <p>公积金：<span data-bind="providentFund"></span></p>
             <p>个税：<span data-bind="personalTax"></span></p>
-
             <p><h4>改革前：</h4></p>
             <p>税后工资：<span data-bind="oldAfterTax"></span></p>
             <p>个税：<span data-bind="oldPersonalTax"></span></p>
-            <p>节约个税：<span data-bind="economyPersonalTax"></span></p>
+            <p>节约个税：<span data-bind="economyPersonalTax"></span></p> -->
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div id="echarMain" style="width: 600px;height:400px;"></div>
           </div>
         </div>
       </div>
@@ -211,22 +251,17 @@
           }
           
           var taxLevel = {
-            level: [1500, 4500, 9000, 35000, 55000, 80000],
-            ratio: [0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
+            level: [0, 1500, 4500, 9000, 35000, 55000, 80000],
+            ratio: [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
           }
 
           var tax = 0;
-          for (var i = 0; i < taxLevel.level.length; i ++) {
-            var preLevel = 0;
-            if (i > 0) {
-              preLevel = taxLevel.level[i - 1];
+          for (var i = 1; i <= taxLevel.level.length; i ++) {
+            if (overflow <= taxLevel.level[i] || i == taxLevel.level.length) {
+              tax += (overflow - taxLevel.level[i - 1]) * taxLevel.ratio[i - 1];
+              break;
             }
-
-            if (overflow <= taxLevel.level[i]) {    
-                tax += (overflow - preLevel) * taxLevel.ratio[i];
-                break;
-            }
-            tax += (taxLevel.level[i] - preLevel) * taxLevel.ratio[i];
+            tax += (taxLevel.level[i] - taxLevel.level[i - 1]) * taxLevel.ratio[i - 1];
           }
           return tax.toFixed(2);
         }
@@ -251,7 +286,7 @@
               name: '销量',
               type: 'pie',
               radius : '70%',
-              center: ['40%', '60%'],
+              center: ['45%', '55%'],
               data: [
                 { name: '税后工资 ' + data[0] + ' 元', value: data[0] },
                 { name: '社保 ' + data[1] + ' 元', value: data[1] },
