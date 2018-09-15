@@ -285,16 +285,15 @@ description: 工资计算，个税计算器
             trigger: 'item',
             formatter: "{a} <br/>{b} ({d}%)"
         },
-        legend: {
+        /*legend: {
           orient: 'vertical',
           right: 'right',
           data: ['税后工资 ' + data[0] + ' 元', '社保 ' + data[1] + ' 元', '公积金 ' + data[2] + ' 元', '个税 ' + data[3] + ' 元']
-        },
+        },*/
         series: [{
           name: '金额',
           type: 'pie',
-          radius : '70%',
-          center: ['45%', '55%'],
+          center: ['50%', '50%'],
           data: [
             { name: '税后工资 ' + data[0] + ' 元', value: data[0] },
             { name: '社保 ' + data[1] + ' 元', value: data[1] },
