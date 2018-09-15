@@ -1,0 +1,312 @@
+---
+title: Tags
+layout: default
+description: talk less do more
+header-img: "img/tag-bg.jpg"
+---
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="工资计算，个税计算器">
+  <meta name="author" content="Kent">
+  <meta name="generator" content="Jekyll v3.6.2">
+  <title>税后工资计算器</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+    crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container" style="margin-top: 50px;">
+    <!-- <div class="alert alert-warning" role="alert">
+      This is a warning alert—check it out!
+    </div> -->
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <p><h1>税后工资计算器</h1></p>
+        <br>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <form id="form">
+          <!-- 税前工资 -->
+          <div class="form-group row" >
+            <label for="inputPreTax" class="col-sm-3 col-form-label">税前工资</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" name="preTax" value="0">
+              <div class="invalid-feedback">请输入一个有效的数字</div>
+            </div>
+          </div>
+          <!-- 社保基数 -->
+          <div class="form-group row">
+            <label for="inputPreTax" class="col-sm-3 col-form-label">社保基数</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" name="socialSecurityBase" value="0">
+              <div class="invalid-feedback">请输入一个有效的数字</div>
+            </div>
+          </div>
+          <!-- 社保比例 -->
+          <div class="form-group row">
+            <label for="inputPreTax" class="col-sm-3 col-form-label">社保比例</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input type="number" class="form-control" name="socialSecurityRatio" value="10.5">
+                <div class="input-group-append">
+                  <div class="input-group-text">%</div>
+                </div>
+                <div class="invalid-feedback">请输入一个有效的数字</div>
+              </div>
+            </div>
+          </div>
+          <!-- 公积金基数 -->
+          <div class="form-group row">
+            <label for="inputPreTax" class="col-sm-3 col-form-label">公积金基数</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" name="providentFundBase" value="0">
+              <div class="invalid-feedback">请输入一个有效的数字</div>
+            </div>
+          </div>
+          <!-- 公积金比例 -->
+          <div class="form-group row">
+            <label for="inputPreTax" class="col-sm-3 col-form-label">公积金比例</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input type="number" class="form-control" name="providentFundRatio" value="7">
+                <div class="input-group-append">
+                  <div class="input-group-text">%</div>
+                </div>
+                <div class="invalid-feedback">请输入一个有效的数字</div>
+              </div>
+            </div>
+          </div>
+          <!-- 个税起征点 -->
+          <div class="form-group row">
+            <label for="inputPreTax" class="col-sm-3 col-form-label">个税起征点</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" name="taxThreshold" value="5000">
+              <div class="invalid-feedback">请输入一个有效的数字</div>
+            </div>
+          </div>
+          <!-- Action -->
+          <div class="form-group row">
+            <div class="col-sm-9 offset-sm-3">
+              <button id="calculateBtn" type="button" class="btn btn-info">计 算</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right"><b>税后工资计算结果</b></label>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">税后工资：</label>
+          <div class="col-sm-5 col-form-label text-success">￥&nbsp;<span data-bind="afterTax"></span></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">社保：</label>
+          <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="socialSecurity"></span></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">公积金：</label>
+          <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="providentFund"></span></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">个税：</label>
+          <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="personalTax"></span></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right"><b>改革前对比</b></label>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">税后工资：</label>
+          <div class="col-sm-5 col-form-label text-success">￥&nbsp;<span data-bind="oldAfterTax"></span></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">个税：</label>
+          <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="oldPersonalTax"></span></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">节约个税：</label>
+          <div class="col-sm-5 col-form-label text-success">￥+<span data-bind="economyPersonalTax"></span></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-7 col-form-label text-right">个税起征点：</label>
+          <div class="col-sm-5 col-form-label text-info">￥&nbsp;3500.00</div>
+        </div>
+        <!-- <p>税后工资：<span data-bind="afterTax"></span></p>
+        <p>社保：<span data-bind="socialSecurity"></span></p>
+        <p>公积金：<span data-bind="providentFund"></span></p>
+        <p>个税：<span data-bind="personalTax"></span></p>
+        <p><h4>改革前：</h4></p>
+        <p>税后工资：<span data-bind="oldAfterTax"></span></p>
+        <p>个税：<span data-bind="oldPersonalTax"></span></p>
+        <p>节约个税：<span data-bind="economyPersonalTax"></span></p> -->
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div id="echarMain" style="width: 600px;height:400px;"></div>
+      </div>
+      <div class="col-md-6 col-sm-12 text-center">
+        <p><h4>分享我</h4></p>
+        <img class="rounded" src="https://github.com/kenttanl/kenttanl.github.io/blob/master/img/personal-tax.png?raw=true" style="max-width: 300px" />
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts-en.common.min.js"></script>
+  <script src="https://cdn.bootcss.com/echarts/2.2.7/chart/pie.js"></script>
+  <script>
+    $(function() {
+      var $input_preTax = $("input[name=preTax]");
+      var $input_socialSecurityBase = $("input[name=socialSecurityBase]");
+      var $input_socialSecurityRatio = $("input[name=socialSecurityRatio]");
+      var $input_providentFundBase = $("input[name=providentFundBase]");
+      var $input_providentFundRatio = $("input[name=providentFundRatio]");
+      var $input_taxThreshold = $("input[name=taxThreshold]");
+
+      bindCheckIsNumberEventForInput($input_preTax);
+      bindCheckIsNumberEventForInput($input_socialSecurityBase);
+      bindCheckIsNumberEventForInput($input_socialSecurityRatio);
+      bindCheckIsNumberEventForInput($input_providentFundBase);
+      bindCheckIsNumberEventForInput($input_providentFundRatio);
+      bindCheckIsNumberEventForInput($input_taxThreshold);
+      
+      var prePreTaxValue = 0;
+      $input_preTax.bind("keyup", function(event) {
+        console.log(event);
+        var preTax = $input_preTax.val();
+        var isNumber = $.isNumeric(preTax);
+
+        var socialSecurityBase = $input_socialSecurityBase.val();
+        var providentFundBase = $input_providentFundBase.val();
+        if (socialSecurityBase == "0" || socialSecurityBase == "" || socialSecurityBase == prePreTaxValue) {
+          $input_socialSecurityBase.val(isNumber ? preTax : 0);
+        }
+        if (providentFundBase == "0" || providentFundBase == "" || socialSecurityBase == prePreTaxValue) {
+          $input_providentFundBase.val(isNumber ? preTax : 0);
+        }
+        prePreTaxValue = preTax;
+      });
+
+      var calculate = function() {        
+        var isValid = true;
+        isValid = checkInputValueIsNumber($input_preTax) && isValid;
+        isValid = checkInputValueIsNumber($input_socialSecurityBase) && isValid;
+        isValid = checkInputValueIsNumber($input_socialSecurityRatio) && isValid;
+        isValid = checkInputValueIsNumber($input_providentFundBase) && isValid;
+        isValid = checkInputValueIsNumber($input_providentFundRatio) && isValid;
+        isValid = checkInputValueIsNumber($input_taxThreshold) && isValid;
+        
+        if (!isValid) {
+          return;
+        }
+        
+        var preTax = parseFloat($input_preTax.val());
+        var socialSecurityBase = parseFloat($input_socialSecurityBase.val()).toFixed(2);
+        var socialSecurityRatio = parseFloat($input_socialSecurityRatio.val()).toFixed(2);
+        var providentFundBase = parseFloat($input_providentFundBase.val()).toFixed(2);
+        var providentFundRatio = parseFloat($input_providentFundRatio.val()).toFixed(2);
+        var taxThreshold = parseFloat($input_taxThreshold.val()).toFixed(2);
+
+        var socialSecurity = (socialSecurityBase * socialSecurityRatio / 100.0).toFixed(2);
+        var providentFund = (providentFundBase * providentFundRatio / 100.0).toFixed(2);
+        var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold);
+        var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2)
+        
+        var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0);
+        var oldAfterTax = (preTax - oldPersonalTax - socialSecurity - providentFund).toFixed(2);
+
+        $("[data-bind=socialSecurity]").html(socialSecurity);
+        $("[data-bind=providentFund]").html(providentFund);
+        $("[data-bind=personalTax]").html(personalTax);
+        $("[data-bind=afterTax]").html(afterTax);
+        $("[data-bind=oldPersonalTax]").html(oldPersonalTax);
+        $("[data-bind=oldAfterTax]").html(oldAfterTax);
+        $("[data-bind=economyPersonalTax]").html((oldPersonalTax - personalTax).toFixed(2));
+
+        buildChart([afterTax, socialSecurity, providentFund, personalTax]);
+      }
+
+      $("#calculateBtn").bind("click", calculate);
+    })
+    
+    var bindCheckIsNumberEventForInput = function($input) {
+      $input.bind("keyup", function() {
+        checkInputValueIsNumber($input);
+      });
+    }
+
+    var checkInputValueIsNumber = function($input) {
+      if ($.isNumeric($input.val()) && parseFloat($input.val()) >= 0) {
+        $input.removeClass("is-invalid");
+        return true;
+      }
+
+      $input.addClass("is-invalid");
+      return false;
+    }
+
+    var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold) {
+      var money = preTax - socialSecurity - providentFund;
+      var overflow = money - taxThreshold;
+      if (overflow <= 0) {
+        return 0.00.toFixed(2);
+      }
+      
+      var taxLevel = {
+        level: [0, 1500, 4500, 9000, 35000, 55000, 80000],
+        ratio: [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
+      }
+
+      var tax = 0;
+      for (var i = 1; i <= taxLevel.level.length; i ++) {
+        if (i == taxLevel.level.length || overflow <= taxLevel.level[i]) {
+          tax += (overflow - taxLevel.level[i - 1]) * taxLevel.ratio[i - 1];
+          break;
+        }
+        tax += (taxLevel.level[i] - taxLevel.level[i - 1]) * taxLevel.ratio[i - 1];
+      }
+      return tax.toFixed(2);
+    }
+
+    var myChart = echarts.init(document.getElementById('echarMain'));
+    var buildChart = function(data) {
+      var option = {
+        title : {
+          text: '',
+          x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} ({d}%)"
+        },
+        legend: {
+          orient: 'vertical',
+          right: 'right',
+          data: ['税后工资 ' + data[0] + ' 元', '社保 ' + data[1] + ' 元', '公积金 ' + data[2] + ' 元', '个税 ' + data[3] + ' 元']
+        },
+        series: [{
+          name: '金额',
+          type: 'pie',
+          radius : '70%',
+          center: ['45%', '55%'],
+          data: [
+            { name: '税后工资 ' + data[0] + ' 元', value: data[0] },
+            { name: '社保 ' + data[1] + ' 元', value: data[1] },
+            { name: '公积金 ' + data[2] + ' 元', value: data[2] },
+            { name: '个税 ' + data[3] + ' 元', value: data[3] },
+          ]
+        }]
+      };
+      
+      myChart.setOption(option);
+    }
+  </script>
+</body>
+    

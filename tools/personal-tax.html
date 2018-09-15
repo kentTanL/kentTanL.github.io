@@ -261,7 +261,7 @@
 
           var tax = 0;
           for (var i = 1; i <= taxLevel.level.length; i ++) {
-            if (overflow <= taxLevel.level[i] || i == taxLevel.level.length) {
+            if (i == taxLevel.level.length || overflow <= taxLevel.level[i]) {
               tax += (overflow - taxLevel.level[i - 1]) * taxLevel.ratio[i - 1];
               break;
             }
