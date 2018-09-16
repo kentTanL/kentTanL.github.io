@@ -12,7 +12,7 @@ tags:
 [TOC]
 [TOC]
 
-# 一、 摘要
+# 一、摘要
 
 此文档主要用于安装 CDH，CDH是Cloudera的软件发行版，包含Apache Hadoop及相关项目。详情请参见官网介绍：
 - 中文：[https://cn.cloudera.com/developers/inside-cdh.html](https://cn.cloudera.com/developers/inside-cdh.html)
@@ -365,7 +365,7 @@ sudo systemctl start cloudera-scm-server.service
 
 http:\/\/\<Server host\>:\<port\>
 
-<Server host> 是安装 Cloudera Manager Server 的服务器的主机名或 IP 地址，<port>是为 Cloudera Manager Server 配置的端口，默认端口 7180。
+\<Server host\> 是安装 Cloudera Manager Server 的服务器的主机名或 IP 地址，\<port\>是为 Cloudera Manager Server 配置的端口，默认端口 7180。
 
 例：http://127.0.0.1:7180/
 
