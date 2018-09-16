@@ -363,7 +363,7 @@ sudo systemctl start cloudera-scm-server.service
 
 ## 8. 进入 Cloudera Manager 管理控制台
 
-http://<Server host>:<port>
+http:\/\/\<Server host\>:\<port\>
 
 <Server host> 是安装 Cloudera Manager Server 的服务器的主机名或 IP 地址，<port>是为 Cloudera Manager Server 配置的端口，默认端口 7180。
 
