@@ -385,19 +385,19 @@ http://<Server host>:<port>
 
 通过主机名和 IP 地址范围搜索指定的集群主机：
 
-![](/img/2018-06-19-cdh-hadoop-install/1.png)
+![image](/img/2018-06-19-cdh-hadoop-install/1.png)
 
 点击继续，并等待系统自动检查完成：
 
-![](/img/2018-06-19-cdh-hadoop-install/2.png)
+![image](/img/2018-06-19-cdh-hadoop-install/2.png)
 
 ### 3\) 选择存储库
 
 因为使用的自定义存储库，所以需要做如下更改：
 
-![](/img/2018-06-19-cdh-hadoop-install/3.png)
+![image](/img/2018-06-19-cdh-hadoop-install/3.png)
 
-![](/img/2018-06-19-cdh-hadoop-install/4.png)
+![image](/img/2018-06-19-cdh-hadoop-install/4.png)
 
 
 将存储库服务器的 IP 地址，添加到集群中每台服务的 host 文件中，例：
@@ -428,7 +428,7 @@ $ sudo createrepo --update  cm5/redhat/6/x86_64/cm/5.4.0/
 
 ### 4\) JDK 安装选项
 
-![](/img/2018-06-19-cdh-hadoop-install/5.png)
+![image](/img/2018-06-19-cdh-hadoop-install/5.png)
 
 ### 5\) 启动单用户运行选项
 
@@ -438,25 +438,25 @@ $ sudo createrepo --update  cm5/redhat/6/x86_64/cm/5.4.0/
 
 提供 SSH 凭证，用以分发向各节点分发安装包，其中用户为 linux 登录用户。
 
-![](/img/2018-06-19-cdh-hadoop-install/6.png)
+![image](/img/2018-06-19-cdh-hadoop-install/6.png)
 
 ### 7\) 安装 JDK 和 Agent
 
 点击继续，系统将自动在各节点安装 JDK 与 angent，等待其完成
 
-![](/img/2018-06-19-cdh-hadoop-install/7.png)
+![image](/img/2018-06-19-cdh-hadoop-install/7.png)
 
 ### 8\) 分发 Parcel
 
 继续下一步，系统会自动将 Hadoop 相关服务安装包分发到各节点，等待其完成。
 
-![](/img/2018-06-19-cdh-hadoop-install/8.png)
+![image](/img/2018-06-19-cdh-hadoop-install/8.png)
 
 ### 9\) 检查主机正确性
 
 安装完成之后，系统会自动检查主机正确性：
 
-![](/img/2018-06-19-cdh-hadoop-install/9.png)
+![image](/img/2018-06-19-cdh-hadoop-install/9.png)
 
 这里有一个问题，应该是之前配置的问题，后面再解决吧，继续下一步
 
@@ -464,13 +464,13 @@ $ sudo createrepo --update  cm5/redhat/6/x86_64/cm/5.4.0/
 
 选择所需的 Hadoop 相关服务，这里选择了 HBase、HDFS、Spark、YARN、Zookeeper：
 
-![](/img/2018-06-19-cdh-hadoop-install/10.png)
+![image](/img/2018-06-19-cdh-hadoop-install/10.png)
 
 ### 11\) 自定义角色分配
 
 选择完需要安装的服务后，就需要为各服务选择对应的主机。根据主机名， Cloudera Manager 的服务安装在以 cli01/cli02 结尾的两台服务器上，其它服务的主节点（除去数据节点，比如 DataNode 和 RegionServer）均安装在以 01 - 05 结尾的服务器上，剩下的譬如 HDFS 的 DataNode、HBase 的 RegionServer、YARN 的 NodeManger 则安装在以 11 ~ 45 结尾的节点上，如下：
 
-![](/img/2018-06-19-cdh-hadoop-install/11.png)
+![image](/img/2018-06-19-cdh-hadoop-install/11.png)
 
 > 注意：上图中 Spark 的 Gateway 请选择与 HiveServer2 相同的主机，否则后面会报错，这里截图时没截对。
 
@@ -478,17 +478,17 @@ $ sudo createrepo --update  cm5/redhat/6/x86_64/cm/5.4.0/
 
 接下来，我们需要为 Hive 和 Activity Monitor 设置数据库，数据库就是我们之前创建的数据库。设置完成后点击测试链接并成功后方可继续：
 
-![](/img/2018-06-19-cdh-hadoop-install/12.png)
+![image](/img/2018-06-19-cdh-hadoop-install/12.png)
 
 ### 13\) 集群的基础配置
 
 继续，需要配置一些基础配置（请根据实际情况更改，比如接受的 DataNode 失败的卷设置为 0，图片里为 4）：
 
-![](/img/2018-06-19-cdh-hadoop-install/13.png)
+![image](/img/2018-06-19-cdh-hadoop-install/13.png)
 
 ### 14\) 自动安装
 
-![](/img/2018-06-19-cdh-hadoop-install/14.png)
+![image](/img/2018-06-19-cdh-hadoop-install/14.png)
 
 ## 2. 异常处理
 
@@ -498,6 +498,6 @@ $ sudo createrepo --update  cm5/redhat/6/x86_64/cm/5.4.0/
 
 因为浏览器是中文版，所以尽管系统是英文版，最终还是显示的中文版。
 
-![](/img/2018-06-19-cdh-hadoop-install/15.png)
+![image](/img/2018-06-19-cdh-hadoop-install/15.png)
 
 至此，基本安装完成。
