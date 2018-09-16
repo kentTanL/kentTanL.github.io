@@ -17,6 +17,18 @@ description: 工资计算，个税计算器
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
     crossorigin="anonymous">
   {% include analytics.html %}
+  <style>
+  @media (min-width: 576px) {
+    .text-lable { 
+       text-align: left;
+    }
+  }
+  @media (min-width: 768px) {
+    .text-lable { 
+       text-align: right;
+    }
+  }
+  </style>
 </head>
 
 <body>
@@ -99,53 +111,45 @@ description: 工资计算，个税计算器
       </div>
       <div class="col-md-3 col-sm-6">
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right"><b>税后工资计算结果</b></label>
+          <label class="col-sm-7 col-form-label text-lable"><b>税后工资计算结果</b></label>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">税后工资：</label>
+          <label class="col-sm-7 col-form-label text-lable">税后工资：</label>
           <div class="col-sm-5 col-form-label text-success">￥&nbsp;<span data-bind="afterTax"></span></div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">个税：</label>
+          <label class="col-sm-7 col-form-label text-lable">个税：</label>
           <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="personalTax"></span></div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">社保：</label>
+          <label class="col-sm-7 col-form-label text-lable">社保：</label>
           <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="socialSecurity"></span></div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">公积金：</label>
+          <label class="col-sm-7 col-form-label text-lable">公积金：</label>
           <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="providentFund"></span></div>
         </div>
       </div>
       <div class="col-md-3 col-sm-6">
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right"><b>改革前对比</b></label>
+          <label class="col-sm-7 col-form-label text-lable"><b>改革前对比</b></label>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">税后工资：</label>
+          <label class="col-sm-7 col-form-label text-lable">税后工资：</label>
           <div class="col-sm-5 col-form-label text-success">￥&nbsp;<span data-bind="oldAfterTax"></span></div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">个税：</label>
+          <label class="col-sm-7 col-form-label text-lable">个税：</label>
           <div class="col-sm-5 col-form-label text-danger">￥-<span data-bind="oldPersonalTax"></span></div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">节约个税：</label>
+          <label class="col-sm-7 col-form-label text-lable">节约个税：</label>
           <div class="col-sm-5 col-form-label text-success">￥+<span data-bind="economyPersonalTax"></span></div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-7 col-form-label text-right">个税起征点：</label>
+          <label class="col-sm-7 col-form-label text-lable">个税起征点：</label>
           <div class="col-sm-5 col-form-label text-info">￥&nbsp;3500.00</div>
         </div>
-        <!-- <p>税后工资：<span data-bind="afterTax"></span></p>
-        <p>社保：<span data-bind="socialSecurity"></span></p>
-        <p>公积金：<span data-bind="providentFund"></span></p>
-        <p>个税：<span data-bind="personalTax"></span></p>
-        <p><h4>改革前：</h4></p>
-        <p>税后工资：<span data-bind="oldAfterTax"></span></p>
-        <p>个税：<span data-bind="oldPersonalTax"></span></p>
-        <p>节约个税：<span data-bind="economyPersonalTax"></span></p> -->
       </div>
       <div class="col-md-6 col-sm-12 text-center">
         <div id="echarMain" style="width: 100%; height:400px;"></div>
@@ -302,12 +306,14 @@ description: 工资计算，个税计算器
             { name: '社保 ' + data[1] + ' 元', value: data[1] },
             { name: '公积金 ' + data[2] + ' 元', value: data[2] },
             { name: '个税 ' + data[3] + ' 元', value: data[3] },
-          ]
+          ],
+          color: ['#28a745','#ffc107','#17a2b8','#dc3545']
         }]
       };
       
       myChart.setOption(option);
     }
+    buildChart([0, 0, 0, 0]);
   </script>
 </body>
     
