@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "CDH-Hadoop 安装"
-date:       2018-09-16 23:20:00
+date:       2018-09-16 23:21:00
 author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
 catalog: true
@@ -55,6 +55,8 @@ tags:
     ```
 
 ## 1. 基础环境配置
+
+> 注：本章节所使用脚本：[https://github.com/kenttanl/cdh-hadoop-install](https://github.com/kenttanl/cdh-hadoop-install)，内含脚本使用具体步骤。
 
 ### 1\) 主机介绍
 
