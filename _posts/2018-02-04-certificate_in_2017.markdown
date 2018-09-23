@@ -33,7 +33,10 @@ Secure coding 认证是公司要求必须要完成的认证，该认证内容主
 11. 缓冲区溢出（Buffer Overflows ）
 12. 不安全的组件交互（Insecure Interaction Between Components）
 13. 有风险的资源管理（Risky Resource Management）
-14. 
+14. CWE SANS 前 25 名的多孔防御（Porous Defenses）
+15. Honorable Mentions
+16. 主动防御（Active Defenses）
+17. Threat Modeling
 
 ### 阿里巴巴 Java 规范认证
 
