@@ -158,6 +158,9 @@ mysqld 0:off 1:off 2:on 3:on 4:on 5:on 6:off
 create database cloudera_manager_service DEFAULT CHARACTER SET utf8;
 grant all on cloudera_manager_service.* to 'cloudera-scm'@'%' identified by 'xxxx' with grant option; 
 
+create database cloudera_manager DEFAULT CHARACTER SET utf8;
+grant all on cloudera_manager.* to 'cloudera-scm'@'%' identified by 'xxxx' with grant option; 
+
 create database hive DEFAULT CHARACTER SET utf8;
 grant all on hive.* to 'xxxx' identified by 'xxxx' ;
 ```
@@ -277,11 +280,14 @@ All done!
 
 > 注：xxxx 为所使用的数据库密码，请根据实际情况进行更改，后面也会用到
 
-```
+```SQL
 $ mysql -u root –p
 
 create database cloudera_manager_service DEFAULT CHARACTER SET utf8; 
 grant all on cloudera_manager_service.* to 'cloudera-scm'@'%' identified by 'xxxx' with grant option;
+
+create database cloudera_manager DEFAULT CHARACTER SET utf8;
+grant all on cloudera_manager.* to 'cloudera-scm'@'%' identified by 'xxxx' with grant option; 
 
 create database hive DEFAULT CHARACTER SET utf8;
 grant all on hive.* to 'xxxx' identified by 'xxxx' ;
