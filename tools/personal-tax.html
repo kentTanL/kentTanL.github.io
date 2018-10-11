@@ -168,6 +168,16 @@ description: 工资计算，个税计算器
     crossorigin="anonymous"></script>
   <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts-en.common.min.js"></script>
   <script>
+    var oldTaxLevel = {
+      level: [0, 1500, 4500, 9000, 35000, 55000, 80000],
+      ratio: [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
+    };
+
+    var newTaxLevel = {
+      level: [0, 3000, 12000, 25000, 35000, 55000, 80000],
+      ratio: [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
+    };
+
     $(function() {
       var $input_preTax = $("input[name=preTax]");
       var $input_socialSecurityBase = $("input[name=socialSecurityBase]");
@@ -222,10 +232,10 @@ description: 工资计算，个税计算器
 
         var socialSecurity = (socialSecurityBase * socialSecurityRatio / 100.0).toFixed(2);
         var providentFund = (providentFundBase * providentFundRatio / 100.0).toFixed(2);
-        var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold);
+        var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold, newTaxLevel);
         var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2)
         
-        var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0);
+        var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0, oldTaxLevel);
         var oldAfterTax = (preTax - oldPersonalTax - socialSecurity - providentFund).toFixed(2);
 
         $("[data-bind=socialSecurity]").html(socialSecurity);
@@ -258,17 +268,17 @@ description: 工资计算，个税计算器
       return false;
     }
 
-    var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold) {
+    var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold, taxLevel) {
       var money = preTax - socialSecurity - providentFund;
       var overflow = money - taxThreshold;
       if (overflow <= 0) {
         return 0.00.toFixed(2);
       }
       
-      var taxLevel = {
+      /*var taxLevel = {
         level: [0, 1500, 4500, 9000, 35000, 55000, 80000],
         ratio: [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
-      }
+      }*/
 
       var tax = 0;
       for (var i = 1; i <= taxLevel.level.length; i ++) {
