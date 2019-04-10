@@ -79,6 +79,14 @@
                   </div>
                 </div>
               </div>
+              <!-- 专项扣除 -->
+              <div class="form-group row">
+                <label for="inputPreTax" class="col-sm-3 col-form-label">专项扣除</label>
+                <div class="col-sm-9">
+                  <input type="number" class="form-control" name="specialDeduction" value="0">
+                  <div class="invalid-feedback">请输入一个有效的数字</div>
+                </div>
+              </div>
               <!-- 个税起征点 -->
               <div class="form-group row">
                 <label for="inputPreTax" class="col-sm-3 col-form-label">个税起征点</label>
@@ -169,6 +177,7 @@
           var $input_providentFundBase = $("input[name=providentFundBase]");
           var $input_providentFundRatio = $("input[name=providentFundRatio]");
           var $input_taxThreshold = $("input[name=taxThreshold]");
+          var $input_specialDeduction = $("input[name=specialDeduction]");
     
           bindCheckIsNumberEventForInput($input_preTax);
           bindCheckIsNumberEventForInput($input_socialSecurityBase);
@@ -176,10 +185,10 @@
           bindCheckIsNumberEventForInput($input_providentFundBase);
           bindCheckIsNumberEventForInput($input_providentFundRatio);
           bindCheckIsNumberEventForInput($input_taxThreshold);
+          bindCheckIsNumberEventForInput($input_specialDeduction);
           
           var prePreTaxValue = 0;
           $input_preTax.bind("keyup", function(event) {
-            console.log(event);
             var preTax = $input_preTax.val();
             var isNumber = $.isNumeric(preTax);
     
@@ -202,6 +211,7 @@
             isValid = checkInputValueIsNumber($input_providentFundBase) && isValid;
             isValid = checkInputValueIsNumber($input_providentFundRatio) && isValid;
             isValid = checkInputValueIsNumber($input_taxThreshold) && isValid;
+            isValid = checkInputValueIsNumber($input_specialDeduction) && isValid;
             
             if (!isValid) {
               return;
@@ -213,12 +223,14 @@
             var providentFundBase = parseFloat($input_providentFundBase.val()).toFixed(2);
             var providentFundRatio = parseFloat($input_providentFundRatio.val()).toFixed(2);
             var taxThreshold = parseFloat($input_taxThreshold.val()).toFixed(2);
+            var specialDeduction = parseFloat($input_specialDeduction.val()).toFixed(2);
     
             var socialSecurity = (socialSecurityBase * socialSecurityRatio / 100.0).toFixed(2);
             var providentFund = (providentFundBase * providentFundRatio / 100.0).toFixed(2);
-            var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold);
-            var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2)
-            
+            // 改革后的个税计算
+            var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold, specialDeduction);
+            var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2);
+            // 改革前的个税计算
             var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0);
             var oldAfterTax = (preTax - oldPersonalTax - socialSecurity - providentFund).toFixed(2);
 
@@ -252,8 +264,16 @@
           return false;
         }
     
-        var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold) {
-          var money = preTax - socialSecurity - providentFund;
+        /**
+         * 个人所得税计算
+         * @param: preTax 税前工资
+         * @param: socialSecurity 社保金额
+         * @param: providentFund 公积金金额
+         * @param: taxThreshold 个税起征点
+         * @param: specialDeduction 专项扣除金额
+         */
+        var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold, specialDeduction = 0) {
+          var money = preTax - socialSecurity - providentFund - specialDeduction;
           var overflow = money - taxThreshold;
           if (overflow <= 0) {
             return 0.00.toFixed(2);

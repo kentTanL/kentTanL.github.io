@@ -53,7 +53,7 @@ description: 工资计算，个税计算器
           <div class="form-group row" >
             <label for="inputPreTax" class="col-sm-3 col-form-label">税前工资</label>
             <div class="col-sm-9">
-              <input type="number" class="form-control" name="preTax" value="0">
+              <input type="number" class="form-control" name="preTax" value="0" min="0">
               <div class="invalid-feedback">请输入一个有效的数字</div>
             </div>
           </div>
@@ -61,7 +61,7 @@ description: 工资计算，个税计算器
           <div class="form-group row">
             <label for="inputPreTax" class="col-sm-3 col-form-label">社保基数</label>
             <div class="col-sm-9">
-              <input type="number" class="form-control" name="socialSecurityBase" value="0">
+              <input type="number" class="form-control" name="socialSecurityBase" value="0" min="0">
               <div class="invalid-feedback">请输入一个有效的数字</div>
             </div>
           </div>
@@ -70,7 +70,7 @@ description: 工资计算，个税计算器
             <label for="inputPreTax" class="col-sm-3 col-form-label">社保比例</label>
             <div class="col-sm-9">
               <div class="input-group">
-                <input type="number" class="form-control" name="socialSecurityRatio" value="10.5">
+                <input type="number" class="form-control" name="socialSecurityRatio" value="10.5" min="0">
                 <div class="input-group-append">
                   <div class="input-group-text">%</div>
                 </div>
@@ -82,7 +82,7 @@ description: 工资计算，个税计算器
           <div class="form-group row">
             <label for="inputPreTax" class="col-sm-3 col-form-label">公积金基数</label>
             <div class="col-sm-9">
-              <input type="number" class="form-control" name="providentFundBase" value="0">
+              <input type="number" class="form-control" name="providentFundBase" value="0" min="0">
               <div class="invalid-feedback">请输入一个有效的数字</div>
             </div>
           </div>
@@ -91,7 +91,7 @@ description: 工资计算，个税计算器
             <label for="inputPreTax" class="col-sm-3 col-form-label">公积金比例</label>
             <div class="col-sm-9">
               <div class="input-group">
-                <input type="number" class="form-control" name="providentFundRatio" value="7">
+                <input type="number" class="form-control" name="providentFundRatio" value="7" min="0">
                 <div class="input-group-append">
                   <div class="input-group-text">%</div>
                 </div>
@@ -99,11 +99,19 @@ description: 工资计算，个税计算器
               </div>
             </div>
           </div>
+          <!-- 专项扣除 -->
+          <div class="form-group row">
+            <label for="inputPreTax" class="col-sm-3 col-form-label">专项扣除</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" name="specialDeduction" value="0" min="0">
+              <div class="invalid-feedback">请输入一个有效的数字</div>
+            </div>
+          </div>
           <!-- 个税起征点 -->
           <div class="form-group row">
             <label for="inputPreTax" class="col-sm-3 col-form-label">个税起征点</label>
             <div class="col-sm-9">
-              <input type="number" class="form-control" name="taxThreshold" value="5000">
+              <input type="number" class="form-control" name="taxThreshold" value="5000" min="0">
               <div class="invalid-feedback">请输入一个有效的数字</div>
             </div>
           </div>
@@ -191,6 +199,7 @@ description: 工资计算，个税计算器
       var $input_providentFundBase = $("input[name=providentFundBase]");
       var $input_providentFundRatio = $("input[name=providentFundRatio]");
       var $input_taxThreshold = $("input[name=taxThreshold]");
+      var $input_specialDeduction = $("input[name=specialDeduction]");
 
       bindCheckIsNumberEventForInput($input_preTax);
       bindCheckIsNumberEventForInput($input_socialSecurityBase);
@@ -198,10 +207,10 @@ description: 工资计算，个税计算器
       bindCheckIsNumberEventForInput($input_providentFundBase);
       bindCheckIsNumberEventForInput($input_providentFundRatio);
       bindCheckIsNumberEventForInput($input_taxThreshold);
+      bindCheckIsNumberEventForInput($input_specialDeduction);
       
       var prePreTaxValue = 0;
       $input_preTax.bind("keyup", function(event) {
-        console.log(event);
         var preTax = $input_preTax.val();
         var isNumber = $.isNumeric(preTax);
 
@@ -224,6 +233,7 @@ description: 工资计算，个税计算器
         isValid = checkInputValueIsNumber($input_providentFundBase) && isValid;
         isValid = checkInputValueIsNumber($input_providentFundRatio) && isValid;
         isValid = checkInputValueIsNumber($input_taxThreshold) && isValid;
+        isValid = checkInputValueIsNumber($input_specialDeduction) && isValid;
         
         if (!isValid) {
           return;
@@ -235,10 +245,11 @@ description: 工资计算，个税计算器
         var providentFundBase = parseFloat($input_providentFundBase.val()).toFixed(2);
         var providentFundRatio = parseFloat($input_providentFundRatio.val()).toFixed(2);
         var taxThreshold = parseFloat($input_taxThreshold.val()).toFixed(2);
+        var specialDeduction = parseFloat($input_specialDeduction.val()).toFixed(2);
 
         var socialSecurity = (socialSecurityBase * socialSecurityRatio / 100.0).toFixed(2);
         var providentFund = (providentFundBase * providentFundRatio / 100.0).toFixed(2);
-        var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold, newTaxLevel);
+        var personalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, taxThreshold, newTaxLevel, specialDeduction);
         var afterTax = (preTax - personalTax - socialSecurity - providentFund).toFixed(2)
         
         var oldPersonalTax = personalTaxCalculate(preTax, socialSecurity, providentFund, 3500.0, oldTaxLevel);
@@ -274,17 +285,12 @@ description: 工资计算，个税计算器
       return false;
     }
 
-    var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold, taxLevel) {
-      var money = preTax - socialSecurity - providentFund;
+    var personalTaxCalculate = function(preTax, socialSecurity, providentFund, taxThreshold, taxLevel, specialDeduction = 0) {
+      var money = preTax - socialSecurity - providentFund - specialDeduction;
       var overflow = money - taxThreshold;
       if (overflow <= 0) {
         return 0.00.toFixed(2);
       }
-      
-      /*var taxLevel = {
-        level: [0, 1500, 4500, 9000, 35000, 55000, 80000],
-        ratio: [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45]
-      }*/
 
       var tax = 0;
       for (var i = 1; i <= taxLevel.level.length; i ++) {
