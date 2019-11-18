@@ -18,7 +18,7 @@ GEM
     ffi (1.9.6-x86-mingw32)
     hitimes (1.2.2)
     hitimes (1.2.2-x86-mingw32)
-    jekyll (3.4.0)
+    jekyll (3.6.3)
       classifier-reborn (~> 2.0)
       colorator (~> 0.1)
       jekyll-coffeescript (~> 1.0)
