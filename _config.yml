@@ -71,7 +71,7 @@ bing_verify:
 timezone:    America/New_York
 future:      true
 # highlighter: pygments
-# highlighter: rouge
+highlighter: rouge
 markdown:    kramdown
 gems:
   - jekyll-sitemap
