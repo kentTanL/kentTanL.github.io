@@ -1,38 +1,111 @@
-title: Kent's blog
-SEOTitle: Kent 的个人博客
-description: github 博客, kent 的个人博客
-paginate: 5
-paginate_path: "page:num"
-show_downloads: true
-theme: 
-gems: [jekyll-paginate]
-header-img: "img/banner.png"
-
-sidebar-avatar: "http://avatar.csdn.net/C/B/4/1_t894690230.jpg"
-sidebar-about-description: "BarackHusseinObama"
-RSS: true
-github_username: "kentTanL"
-csdn_username: "t894690230"
-
-# Build settings
-# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
-highlighter: rouge
-permalink: pretty
-paginate: 10
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
-anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+title:            Kent's Tech Blog
+description:      Technical articles on Java and open source technologies
+#disqus_shortname: neohpstrtheme
+reading_time:     false
+words_per_minute: 200
+logo:             img/logo-48.png
+# Your site's domain goes here (eg: //mmistakes.github.io, http://mademistakes.com, etc)
+# When testing locally leave blank or use http://localhost:4000
+# url: http://kenttanl.github.io
+url: http://localhost:4000
 
 
-# Featured Tags
-featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+menu:
+  - title: 'Home'
+    url: '/'
+  - title: 'About the Author'
+    url: '/about'
+  - title: 'All Posts'
+    url: '/posts'
+#  - title: 'Tags'
+#    url: '/tags'
+#  - title: 'Categories'
+#    url: '/categories'
+#    type: 'categories'
+#  - title: 'Favorites'
+#    url: '#'
+#    submenu:
+#      - title: 'highlighter'
+#        url: '/code-highlighting-post/'
+#      - title: 'intro'
+#        url: '/readability-post/'
 
-# Analytics settings
+# Owner/author information
+owner:
+  name:           Kent
+  site:           http://kentt.top/
+  avatar:         images/avatar.jpg
+  bio:            "Java 与开源技术爱好者"
+  email:          894690230@qq.com
+  # Social networking links used in footer. Update and remove as you like.
+  # twitter:
+  # facebook:
+  github: kenttanl
+  stackexchange:
+  # linkedin: elankumaran-srinivasan-290851a4
+  instagram:
+  flickr:
+  tumblr:
+  # google plus id, include the '+', eg +AronBordin
+  # google_plus:
+
+social:
+  - title: "github"
+    url: "https://github.com/kenttanl"
+  # - title: "linkedin"
+  #   url: "https://www.linkedin.com/in/elankumaran-srinivasan-290851a4"
+  # - title: "youtube"
+  #   url: "https://www.youtube.com/channel/UCfnSek-9HPWOx5e2pH7VFgg"
+# Background image to be tiled on all pages
+background:
+
 # Baidu Analytics
 ba_track_id: 8eb5262d38c50c342a631d2c55513271
-# Google Analytics
-ga_track_id: UA-91647085-1            # Format: UA-xxxxxx-xx
-ga_domain: auto
+# Analytics and webmaster tools stuff goes here
+google_analytics: UA-91647085-1 
+google_verify:
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:
+
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone:    America/New_York
+future:      true
+# highlighter: pygments
+# highlighter: rouge
+markdown:    kramdown
+gems:
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-paginate
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# https://github.com/mojombo/jekyll/wiki/Permalinks
+# permalink:   /:categories/:title/
+permalink: pretty
+
+# Amount of post to show on home page
+paginate: 10
+
+kramdown:
+  input: GFM
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  use_coderay: true
+  syntax_highlighter: rouge
+
+  coderay:
+    coderay_line_numbers: nil
+    coderay_line_numbers_start: 1
+    coderay_tab_width: 4
+    coderay_bold_every: 10
+    coderay_css: class
+
+include: [".htaccess"]
+exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
 
 leancloud:
   enable: true

@@ -1,4 +1,6 @@
-﻿source 'https://rubygems.org'
+source 'http://gems.ruby-china.com/'
 
-gemspec
-gem 'jekyll-paginate'
+gem 'jekyll'
+gem 'sass'
+gem 'octopress', '~> 3.0.0.rc.12'
+gem 'jekyll-sitemap'

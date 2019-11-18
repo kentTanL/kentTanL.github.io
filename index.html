@@ -1,51 +1,72 @@
 ---
-layout: page
-description: "<img class='emoji' height='20' width='20' src='https://assets-cdn.github.com/images/icons/emoji/city_sunrise.png'> 在路上"
+layout: post-index
+title: "Welcome to my Tech Blog"
+description: "Describe this nonsense."
+tags: [Jekyll, theme, themes, responsive, blog, modern]
+comments: false
 ---
 
-{% for post in paginator.posts %}
-<div class="post-preview">
-    <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title article-title {% if post.type == 'T' %}t-t{% else %}{% if post.type == 'R' %}t-r{% else %}t-o{% endif %}{% endif %}">{{ post.title }}</h2>
-        <!--
-        {% if post.subtitle %}
-        <h4 class="post-subtitle">
-            {{ post.subtitle }}
-        </h4>
-        {% endif %}
-        -->
-    </a>
-    <div class="post-content-preview">
-        {{ post.content | strip_html | truncate:200 }} <a href="{{ post.url | prepend: site.baseurl }}">[继续阅读...]</a>
+<div class="row">
+  <div class="col-sm-6 col-md-4 col-lg-4">
+    <div class="thumbnail head-thumbnail-item">
+      <div class="img">
+        <img src="{{ "/img/calculator.jpg" | prepend: site.baseurl }}" alt="税后工资计算器">
+      </div>
+      <div class="caption">
+        <h3>税后工资计算器</h3>
+        <p>一款简洁、无广告的最新税收政策计算器，快速对比改革前后交税变化</p>
+        <p><a href="{{ "/tools/personal-tax/" | prepend: site.baseurl }}" class="btn btn-default" role="button">计算我的税后工资</a></p>
+      </div>
     </div>
-    
-    <p class="post-meta">
-        <!-- Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%Y-%m-%d" }} --> <!-- post.date | date: "%B %-d, %Y" -->
-        Posted on {{ post.date | date: "%Y-%m-%d" }} 
-        {% if site.leancloud.enable %}
-            <span id="{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}">
-             <span class="post-meta-divider">|</span>
-             <span class="post-meta-item-text"> 阅读:  </span>
-             <span class="leancloud-visitors-count"></span>
-            </span>
-        {% endif %}
-    </p>
+  </div>
+  <div class="col-sm-6 col-md-4 col-lg-4">
+    <div class="thumbnail head-thumbnail-item">
+      <div class="img">
+        <img src="{{ "/img/idocument.jpg" | prepend: site.baseurl }}" alt="iDocument">
+      </div>
+      <div class="caption">
+        <h3>iDocument</h3>
+        <p>收集与 Java 开发相关的文档，包括基础系统服务（大数据、流计算、NoSQL 等）、专业名词、jar 包、开发工具等文档</p>
+        <p><a href="https://github.com/kenttanl/iDocuments" class="btn btn-default" role="button">查看更多</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4 col-lg-4">
+    <div class="thumbnail head-thumbnail-item">
+      <div class="img">
+        <img src="{{ "/img/csdn-blog.jpg" | prepend: site.baseurl }}" alt="iDocument">
+      </div>
+      <div class="caption">
+        <h3>CSDN Blog</h3>
+        <p>一个不定时更新的 CSDN 博客</p>
+        <p><a href="https://blog.csdn.net/t894690230" class="btn btn-default" role="button">查看更多</a></p>
+      </div>
+    </div>
+  </div>
 </div>
-<hr class="dashed">
-{% endfor %}
 
-<!-- Pager -->
-{% if paginator.total_pages > 1 %}
-<ul class="pager">
-    {% if paginator.previous_page %}
-    <li class="previous">
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
-    </li>
-    {% endif %}
-    {% if paginator.next_page %}
-    <li class="next">
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
-    </li>
-    {% endif %}
-</ul>
-{% endif %}
+{% for post in site.posts %}
+  {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+  {% capture next_year %}{{ post.previous.date | date: "%Y" }}{% endcapture %}
+
+  {% if forloop.first %}
+  <article>
+    <h2 id="{{ this_year }}-ref">Posts in {{ this_year }}</h2>
+    <ul>
+  {% endif %}
+
+      <li class="entry-title"><a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+
+  {% if forloop.last %}
+    </ul>
+  </article>
+  {% else %}
+      {% if this_year != next_year %}
+        </ul>
+      </article>
+      <article>
+        <h2 id="{{ next_year }}-ref" class="year-heading">Posts in {{next_year}}</h2>
+        <ul>
+      {% endif %}
+  {% endif %}
+{% endfor %}

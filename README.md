@@ -4,7 +4,7 @@
 
 ### 模板
 
-- 改编自 huxblog: [https://github.com/Kaijun/hexo-theme-huxblog](https://github.com/Kaijun/hexo-theme-huxblog)
+- Based on [Neo-HPSTR Jekyll Theme](https://github.com/mmistakes/hpstr-jekyll-theme)
 
 ### 统计
 
@@ -32,6 +32,7 @@
   > assets/css
   > css
   > fonts
+  > images
   > img
   > js
   > less

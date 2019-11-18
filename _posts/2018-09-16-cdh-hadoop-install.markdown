@@ -9,12 +9,13 @@ tags:
     - hadoop, yarn
 ---
 
-[TOC]
-[TOC]
+* TOC
+{:toc}
 
 # 一、摘要
 
 此文档主要用于安装 CDH，CDH是Cloudera的软件发行版，包含Apache Hadoop及相关项目。详情请参见官网介绍：
+
 - 中文：[https://cn.cloudera.com/developers/inside-cdh.html](https://cn.cloudera.com/developers/inside-cdh.html)
 - 英文：[https://www.cloudera.com/products/open-source/apache-hadoop/key-cdh-components.html](https://www.cloudera.com/products/open-source/apache-hadoop/key-cdh-components.html)
 
@@ -38,6 +39,7 @@ tags:
 # 二、安装
 
 请注意本文档与实际安装环境的区别：
+
 - 本文档安装版本为：CDH 5.8.3
 - 系统版本：centos 7.2.1511
 - 每台服务器 CPU / Physical memory / Disk 信息：
@@ -45,7 +47,7 @@ tags:
     - master 节点（5 台）：CPU core 16, Physical memory 251.6 GiB, Disk ~= 4TiB 
     - salve 节点（35 台）：CPU core 16, Physical memory 251.6 GiB, Disk ~= 13.1TiB 
 - 因为是内网安装，所以我们提前下载了安装包，并配置了 yum repository，repo 文件如下：
-    ```
+    ```rouge
     $ cat /etc/yum.repos.d/cloudera-manager.repo
     [cloudera-manager]
     name = Cloudera Manager, Version 5.8.3
