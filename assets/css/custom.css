@@ -235,6 +235,14 @@ blockquote {
     background-color: #eef0f4;
 }
 
+.rouge-code {
+    padding: 0 !important;
+}
+
+table.rouge-table {
+    margin-bottom: 0 !important;
+}
+
 table.rouge-table th, table.rouge-table td {
     border: 0 !important;
     margin-bottom: 0;
