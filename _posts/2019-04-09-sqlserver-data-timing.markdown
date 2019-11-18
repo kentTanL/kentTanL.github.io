@@ -7,7 +7,7 @@ author:     "Kent"
 header-img: "img/post-bg-2016.jpg"
 catalog: true
 tags:
-    - HBase
+    - SQLServer
 ---
 
 * TOC
