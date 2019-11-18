@@ -55,7 +55,19 @@ comments: false
     <ul>
   {% endif %}
 
-      <li class="entry-title"><a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+      <li class="entry-title">
+        <a class="post-link normal" href="{{ site.baseurl }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+        <span class="entry-date date published updated ml-1 post-item-metedata">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%m-%d" }}</time>
+        </span>
+        {% if site.leancloud.enable %}
+        <span id="{{ post.url }}" class="leancloud_visitors post-item-metedata" data-flag-title="{{ post.title }}">
+            <span class="post-meta-item-text">, </span>
+          <span class="leancloud-visitors-count">-</span>
+          <span class="post-meta-item-text"> readings</span>
+        </span>
+        {% endif %}
+      </li>
 
   {% if forloop.last %}
     </ul>

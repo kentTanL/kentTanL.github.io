@@ -12,7 +12,7 @@ a:focus, a:hover {
 }
 
 a.normal {
-    color: #0366d6;
+    color: #0366d6;  /* color: #337ab7; */
     text-decoration: none;
 }
 
@@ -53,8 +53,20 @@ a.normal {
     margin-bottom: 0 !important;;
 }
 
+.ml-1 {
+    margin-left: 4px !important;
+}
+
+.ml-1 {
+    margin-left: 8px !important;
+}
+
 .w-100 {
     width: 100% !important;
+}
+
+.float-right {
+    float: right !important;
 }
 
 .head-thumbnail-item {
@@ -72,6 +84,10 @@ a.normal {
 
 .head-thumbnail-item a {
     margin-bottom: 0;
+}
+
+.post-item-metedata {
+    color: rgba(85,85,85,0.8)
 }
 
 .entry-read {
