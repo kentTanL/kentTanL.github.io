@@ -41,6 +41,12 @@ a.normal {
     }
 }
 
+@media only screen and (min-width: 62.5em) {
+    #post-index article {
+        padding: 20px 60px;
+    }
+}
+
 .inline-block {
     display: inline-block !important;
 }
