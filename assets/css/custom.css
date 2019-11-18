@@ -225,13 +225,15 @@ blockquote {
 }
 
 .rouge-gutter {
-    width: 48px;
+    width: 42px;
     overflow: hidden;
     text-align: right;
 }
 
 .rouge-gutter pre.lineno {
+    text-align: right;
     padding-right: 4px;
+    padding-left: 4px;
     background-color: #eef0f4;
 }
 
@@ -252,10 +254,6 @@ table.rouge-table th, table.rouge-table td {
 table.rouge-table>tbody>tr>td, table.rouge-table>tbody>tr>th, table.rouge-table>tfoot>tr>td, 
 table.rouge-table>tfoot>tr>th, table.rouge-table>thead>tr>td, table.rouge-table>thead>tr>th {
     border-top: 0 !important;
-}
-
-table.rouge-table .lineno {
-    text-align: right;
 }
 
 /* Markdown style */
