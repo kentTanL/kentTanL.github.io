@@ -69,8 +69,16 @@ a.normal {
     float: right !important;
 }
 
-.head-thumbnail-item {
+/* .head-thumbnail-item {
     height: 370px;
+} */
+
+.head-thumbnail-item .caption .caption-desc {
+    height: 115px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
 }
 
 .head-thumbnail-item .img {

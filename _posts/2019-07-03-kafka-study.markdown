@@ -34,7 +34,7 @@ kafka 是一个分布式流处理平台，主要适用于以下场景：
 
 Kafka 集群中的单台服务器被称为 Broker，Broker 中包含了多个 Partition。Partition 是一个有序的队列，消息最终将写入 Partition ，同时它也是 Topic 在物理上的分组。 每个 Topic 代表一类消息，一个 Topic 包含一个或多个 Partition，与数据库表类似，用户在发送或读取消息时需要指定具体的 Topic。Producer  意为生产者，代表着用户发送消息的一端，与此对应的是 Consumer，意为消费者，即接收消息并做出相应处理的一端。
 
-![image](/img/2019-07-03-kafka-study/1.png)
+![image](/img/2019-07-03-kafka-study/1.jpg)
 
 ## Broker
 每台 Kafka 服务器被称为 Broker，多个 Broker 组成了 Kafka 集群。
@@ -45,7 +45,7 @@ Topic 就是数据主题，是数据记录发布的地方，可以用来区分�
 
 对于每一个 topic， Kafka 集群都会维持一个分区日志，如下所示： 
 
-![image](/img/2019-07-03-kafka-study/2.png)
+![image](/img/2019-07-03-kafka-study/2.jpg)
 
 每个 Partition  都是有序且顺序不可变的记录集，并且不断地追加到结构化的 commit log 文件。Partition  中的每一个记录都会分配一个 id 号来表示顺序，我们称之为 offset，offset 用来作为 Partition  中每一条记录的唯一标识。 
 

@@ -17,7 +17,7 @@ tags:
 
 数据异构实时同步是指将数据从源端数据库近实时的同步至目的端数据库的一个过程，比如将 SQLServer 中的数据同步至 HBase 或 Kafka 中。不同于离线同步，实时同步需要解决变更数据采集与数据时序等问题，以此保证数据的一致性。本文主要介绍以 SQLServer 为源端进行数据同步的过程中产生的数据时序相关的问题。
 
-![image](/img/2019-04-09-sqlserver-data-timing/1.png)
+![image](/img/2019-04-09-sqlserver-data-timing/1.jpg)
 
 不同于 MySQL 可以通过解析 BinLog 的方式采集变更数据，在 SQLServer 中，由于其本身的特征，主要使用以下方式采集变更数据：
 
@@ -27,7 +27,7 @@ tags:
 
 CDC 由于需要太多的资源，所以仅考虑 Trigger 以及 CT 的方式，其大致流程为：通过 Trigger 或 CT 的方式获取到变更数据的主键，然后根据主键再去源表拿到源数据即可实现变更数据的获取。
 
-![image](/img/2019-04-09-sqlserver-data-timing/2.png)
+![image](/img/2019-04-09-sqlserver-data-timing/2.jpg)
 
 ## 二、数据时序的问题
 
@@ -55,7 +55,7 @@ id |  操作
 
 在确定此前提后，利用流式数据传输以及多线程 hash 分发数据，并结合 Kafka 的分片（partition）模型，便可实现一个高吞吐多并发的数据同步模型。
 
-![image](/img/2019-04-09-sqlserver-data-timing/3.png)
+![image](/img/2019-04-09-sqlserver-data-timing/3.jpg)
 
 确定数据以主键为单位的有序性之后，还得面对一个问题，即数据操作被重复发送的问题。
 
