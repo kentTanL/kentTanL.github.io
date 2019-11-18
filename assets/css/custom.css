@@ -220,8 +220,8 @@ blockquote {
     border: 0;
 }
 
-.markdown-content .highlight pre.highlight {
-    padding: 0
+.markdown-content .highlight pre.highlight, .markdown-content .highlight pre.highlight code {
+    padding: 0 !important;
 }
 
 .rouge-gutter {
@@ -230,15 +230,15 @@ blockquote {
     text-align: right;
 }
 
-.rouge-gutter pre {
+.rouge-gutter pre.lineno {
     padding-right: 4px;
+    background-color: #eef0f4;
 }
-
 
 table.rouge-table th, table.rouge-table td {
     border: 0 !important;
     margin-bottom: 0;
-    padding: 0;
+    padding: 0 !important;
 }
 
 table.rouge-table>tbody>tr>td, table.rouge-table>tbody>tr>th, table.rouge-table>tfoot>tr>td, 
