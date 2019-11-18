@@ -55,7 +55,7 @@ comments: false
     <ul>
   {% endif %}
 
-      <li class="entry-title"><a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+      <li class="entry-title"><a href="{{ site.baseurl }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
 
   {% if forloop.last %}
     </ul>
@@ -76,11 +76,11 @@ comments: false
   <header>
     {% if post.image.feature %}
       <div class="entry-image-index">
-        <a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}"><img src="{{ site.url }}/images/{{ post.image.feature }}" alt="{{ post.title }}"></a>
+        <a href="{{ site.baseurl }}{{ post.url }}" title="{{ post.title }}"><img src="{{ site.baseurl }}/images/{{ post.image.feature }}" alt="{{ post.title }}"></a>
       </div><!-- /.entry-image -->
     {% endif %}
     <div class="entry-meta">
-      <span class="entry-date date published updated"><time datetime="{{ post.date | date_to_xmlschema }}"><a href="{{ site.url }}{{ post.url }}">{{ post.date | date: "%Y-%m-%d" }}</a></time></span><span class="author vcard"><span class="fn"><a href="{{ site.url }}/about/" title="About {{ site.owner.name }}">{{ site.owner.name }}</a></span></span>
+      <span class="entry-date date published updated"><time datetime="{{ post.date | date_to_xmlschema }}"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.date | date: "%Y-%m-%d" }}</a></time></span><span class="author vcard"><span class="fn"><a href="{{ site.baseurl }}/about/" title="About {{ site.owner.name }}">{{ site.owner.name }}</a></span></span>
       {% if site.leancloud.enable %}
       <span id="{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}">
         <span class="post-meta-divider"> | </span>
@@ -97,9 +97,9 @@ comments: false
       {% endif %}
     </div><!-- /.entry-meta -->
     {% if post.link %}
-      <h1 class="entry-title post-link"><a href="{{ site.url }}{{ post.url }}" class="permalink" rel="bookmark" title="{{ post.title }}"><i class="fa fa-bookmark"></i></a> <a href="{{ post.link }}">{{ post.title }}</a></h1>
+      <h1 class="entry-title post-link"><a href="{{ site.baseurl }}{{ post.url }}" class="permalink" rel="bookmark" title="{{ post.title }}"><i class="fa fa-bookmark"></i></a> <a href="{{ post.link }}">{{ post.title }}</a></h1>
     {% else %}
-      <h1 class="entry-title post-link"><a href="{{ site.url }}{{ post.url }}" rel="bookmark" title="{{ post.title }}" itemprop="url">{{ post.title }}</a></h1>
+      <h1 class="entry-title post-link"><a href="{{ site.baseurl }}{{ post.url }}" rel="bookmark" title="{{ post.title }}" itemprop="url">{{ post.title }}</a></h1>
     {% endif %}
   </header>
   <div class="entry-content">
@@ -115,9 +115,9 @@ comments: false
 <div class="pagination w-100">
   {% if paginator.previous_page %}
     {% if paginator.previous_page == 1 %}
-      <a href="{{ site.url }}" class="btn">Previous</a>
+      <a href="{{ site.baseurl }}" class="btn">Previous</a>
     {% else %}
-      <a href="{{ site.url }}/page{{ paginator.previous_page }}" class="btn">Previous</a>
+      <a href="{{ site.baseurl }}/page{{ paginator.previous_page }}" class="btn">Previous</a>
     {% endif %}
   {% else %}
     Previous
@@ -127,7 +127,7 @@ comments: false
       {% if paginator.page == 1 %}
         <span class="current-page">1</span>
       {% else %}
-        <a href="{{ site.url }}">1</a>
+        <a href="{{ site.baseurl }}">1</a>
       {% endif %}
     </li>
     {% for count in (2..paginator.total_pages) %}
@@ -135,13 +135,13 @@ comments: false
         {% if count == paginator.page %}
           <span class="current-page">{{ count }}</span>
         {% else %}
-          <a href="{{ site.url }}/page{{ count }}">{{ count }}</a>
+          <a href="{{ site.baseurl }}/page{{ count }}">{{ count }}</a>
         {% endif %}
       </li>
     {% endfor %}
   </ul>
   {% if paginator.next_page %}
-    <a href="{{ site.url }}/page{{ paginator.next_page }}" class="btn">Next</a>
+    <a href="{{ site.baseurl }}/page{{ paginator.next_page }}" class="btn">Next</a>
   {% else %}
     Next
   {% endif %}

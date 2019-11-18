@@ -215,6 +215,31 @@ blockquote {
     margin-block-start: 0.8rem;
     margin-block-end: 1rem;
 }
+
+.rouge-gutter gl {
+    width: 48px;
+    overflow: hidden;
+    text-align: right;
+}
+
+.rouge-gutter gl pre {
+    padding-right: 4px;
+}
+
+
+table.rouge-table th, table.rouge-table td {
+    border: 0 !important;
+}
+
+table.rouge-table>tbody>tr>td, table.rouge-table>tbody>tr>th, table.rouge-table>tfoot>tr>td, 
+table.rouge-table>tfoot>tr>th, table.rouge-table>thead>tr>td, table.rouge-table>thead>tr>th {
+    border-top: 0 !important;
+}
+
+table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
 /* Markdown style */
 
 input.form-control {

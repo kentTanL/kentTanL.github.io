@@ -6,7 +6,7 @@ layout: none
 <urlset>
     {% for post in site.posts limit:100 %}  
         <url>
-            <loc>{{ site.baseurl}}{{ site.url }}{{ post.url }}</loc>
+            <loc>{{ site.baseurl}}{{ site.baseurl }}{{ post.url }}</loc>
             <lastmod>{{ post.date | date: "%Y-%m-%d" }}</lastmod>
         </url>
     {% endfor %} 
