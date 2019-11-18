@@ -256,6 +256,10 @@ table.rouge-table>tfoot>tr>th, table.rouge-table>thead>tr>td, table.rouge-table>
     border-top: 0 !important;
 }
 
+.markdown-content .highlight .n {
+    color: #333;
+}
+
 /* Markdown style */
 
 input.form-control {
