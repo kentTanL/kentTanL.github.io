@@ -261,6 +261,32 @@ table.rouge-table>tfoot>tr>th, table.rouge-table>thead>tr>td, table.rouge-table>
     color: #333;
 }
 
+/* FIX Serve Style */
+.markdown-content .language-plaintext .rouge-table {
+    display: inline;
+}
+.markdown-content .language-plaintext .rouge-table tbody {
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+.markdown-content .language-plaintext .rouge-table tbody .rouge-gutter {
+    display: none;
+}
+.markdown-content .language-plaintext .rouge-table tbody .rouge-code {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+.markdown-content .language-plaintext .rouge-table tbody .rouge-code pre {
+    padding: 0;
+    margin: 0;
+    /* line-height: 24px; */
+    display: inline;
+}
+}
+
+
 /* Markdown style */
 
 input.form-control {
