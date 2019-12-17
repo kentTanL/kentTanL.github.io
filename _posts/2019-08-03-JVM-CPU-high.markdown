@@ -29,7 +29,7 @@ tags:
 $ top
 ```
 
-![TOP](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9ub3RlLnlvdWRhby5jb20veXdzL3B1YmxpYy9yZXNvdXJjZS84YzgxNDY1OGVlYjMzZmE2NTQ3MTg1ZTBjZmMwZjA1YS94bWxub3RlL1dFQlJFU09VUkNFMGIxNjllZDViZWFmNmJlZGExZTQwMzZhMDNhNzJhNmMvMjgwMjI)
+![TOP](/img/2019-08-03-jvm-cpu-high/1.jpg)
 
 因为只有 docker 中的应用使用了 java 命令，所以确定就是它了。
 
@@ -41,7 +41,7 @@ $ top
 $ sudo docker stats
 ```
 
-![docker_stats](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9ub3RlLnlvdWRhby5jb20veXdzL3B1YmxpYy9yZXNvdXJjZS84YzgxNDY1OGVlYjMzZmE2NTQ3MTg1ZTBjZmMwZjA1YS94bWxub3RlL1dFQlJFU09VUkNFZDhkYmEwZmIyYTFmY2U5NTFjOTIxN2YxMjdkM2EyYTMvMjgwMjQ)
+![docker_stats](/img/2019-08-03-jvm-cpu-high/2.jpg)
 
 可以看到 ID 为 af6b5699a590 的容器占用 CPU 很高。
 
@@ -52,14 +52,14 @@ $ sudo docker stats
 ```shell
 $ sudo docker exec -it af6b5699a590 ps -ef
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20190803222613991.png)
+![在这里插入图片描述](/img/2019-08-03-jvm-cpu-high/3.jpg)
 
 **4) 使用 docker exec & top 命令找到出问题的线程的 PID**
 
 ```shell
 $ sudo docker exec -it af6b5699a590 top -H -p 1
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2019080320440751.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Q4OTQ2OTAyMzA=,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](/img/2019-08-03-jvm-cpu-high/4.jpg)
 
 这里的 PID 可用与在后面的 dump 文件中查找日志，但是需要将其从 10 进制转换为 16 进制，此处 56 的 16 进制为 0x38.
 
@@ -92,7 +92,7 @@ $ /jvm/java-11-openjdk-11.0.4.11-0.el7_6.x86_64/bin/jstack -l 1 | grep -n -A 15 
 
 （注：如果 docker 容器内只有 JRE，而没有 JDK，那么可以使用 `docker cp` 命令将本机的 JDK 拷贝至容器内。）
 
-![jstack](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9ub3RlLnlvdWRhby5jb20veXdzL3B1YmxpYy9yZXNvdXJjZS80MjFhY2ZkNjM5NWRiODVkNWQxNTI0MzE1MDRlMjNiZC94bWxub3RlL1dFQlJFU09VUkNFZTczZDYxZTk0M2E3ZGI0YmE5YmVjODhjYjhhN2VlMDgvMjgwMzg)
+![jstack](/img/2019-08-03-jvm-cpu-high/5.jpg)
 
 这里的 0x38 就是上面定位到的线程的 PID 的 16 进制，同时可以看到已经找到指定的代码行，那么问题极有可能就在这附近。
 
