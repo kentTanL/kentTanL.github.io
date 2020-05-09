@@ -36,7 +36,7 @@ a.normal {
         max-width: 900px
     }
 }
-/*
+
 @media only screen and (min-width: 62.5em) {
     #post .entry-content, #page .entry-content {
         max-width: 1100px !important;
@@ -48,7 +48,7 @@ a.normal {
         max-width: 1100px !important;
     }
 }
-*/
+
 
 @media only screen and (min-width: 62.5em) {
     #post-index article {
@@ -298,14 +298,4 @@ table.rouge-table>tfoot>tr>th, table.rouge-table>thead>tr>td, table.rouge-table>
 
 input.form-control {
     height: 38px;
-}
-
-@media only screen and (min-width: 62.5em)
-#post .entry-content, #page .entry-content {
-    max-width: 1100px;
-}
-
-@media only screen and (min-width: 62.5em)
-.read-more {
-    max-width: 1100px;
 }
