@@ -299,3 +299,7 @@ table.rouge-table>tfoot>tr>th, table.rouge-table>thead>tr>td, table.rouge-table>
 input.form-control {
     height: 38px;
 }
+
+.fit-vids-style {
+    height: 0;
+}
